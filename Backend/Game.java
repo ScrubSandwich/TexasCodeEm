@@ -35,6 +35,7 @@ public class Game {
         }
     }
 
+    // give each player 2 cards and print their hand
     private void dealToPlayers() {
 		for (int i = 0; i < PLAYER_SIZE; i++) {
             players[i].setCard(1, deck.deal());
@@ -45,6 +46,7 @@ public class Game {
         System.out.print("\n");
     }
 
+    // allow first the small blind (button), then big blind to either raise, call, or fold.
     private void getPreFlopAction() {
         s = new Scanner(System.in);
         pot = 0.0;
@@ -69,7 +71,6 @@ public class Game {
             System.out.println("");
 
             String buttonDecision = s.nextLine();
-            s.nextLine();
             switch(buttonDecision) {
                 case "c": players[0].setStack(players[0].getStack() - 0.5);
                           pot += 0.5;
@@ -136,6 +137,7 @@ public class Game {
         System.out.println("The flop is " + deck.deal().toString() + " " + deck.deal().toString() + " " + deck.deal().toString());
     }
 
+    // switches the order of players; the first player in the array is the button
     private void moveButton() {
         Player temp = players[0];
         players[0] = players[1];
