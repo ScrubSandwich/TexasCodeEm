@@ -36,7 +36,7 @@ public class Game {
       Player[] players = new Player[PLAYER_SIZE];
 
       for (int i = 0; i < PLAYER_SIZE; i++) {
-          players[i] = "Player" + (i + 1);
+          players[i] = new Player("Player" + (i + 1));
       }
 
       Game game = new Game(players);
