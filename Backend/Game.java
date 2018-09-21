@@ -28,6 +28,7 @@ public class Game {
     public void start() {
         while (running) {
             dealToPlayers();
+            moveButton();
             getPreFlopAction();
             getFlopAction();
             running = false;
@@ -39,8 +40,8 @@ public class Game {
             players[i].setCard(1, deck.deal());
             players[i].setCard(2, deck.deal());
 
-            System.out.println("Player" + i + "'s Cards: " + players[i].getCard(1).toString());
-            System.out.println("Player" + i + "'s Cards: " + players[i].getCard(2).toString());
+            //System.out.println("Player" + i + "'s Cards: " + players[i].getCard(1).toString());
+            //System.out.println("Player" + i + "'s Cards: " + players[i].getCard(2).toString());
 		}
     }
 
@@ -52,6 +53,12 @@ public class Game {
 
     private void getFlopAction() {
 
+    }
+
+    private void moveButton() {
+        Player temp = players[0];
+        players[0] = players[1];
+        players[1] = temp;
     }
 
     public static void main(String[] args) {
