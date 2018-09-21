@@ -6,8 +6,13 @@ public class Game {
 
     private boolean running = true;
 
-    public Game(Player[] players) {
-        players = new Player[players.length];
+    public Game(Player[] p) {
+        this.players = new Player[p.length];
+
+        for (int i = 0; i < PLAYER_SIZE; i++) {
+            this.players[i] = p[i];
+        }
+
 		deck = new Deck();
         deck.shuffle();
     }
@@ -16,6 +21,7 @@ public class Game {
         while (running) {
             dealToPlayers();
             getFlopAction();
+            running = false;
         }
     }
 
@@ -24,7 +30,8 @@ public class Game {
             players[i].setCard(1, deck.deal());
             players[i].setCard(2, deck.deal());
 
-            System.out.println("Player" + i + "'s Cards: " + players[i].toString());
+            System.out.println("Player" + i + "'s Cards: " + players[i].getCard(1).toString());
+            System.out.println("Player" + i + "'s Cards: " + players[i].getCard(2).toString());
 		}
     }
 
