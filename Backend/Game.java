@@ -15,6 +15,7 @@ public class Game {
     public void start() {
         while (running) {
             dealToPlayers();
+            getFlopAction();
         }
     }
 
@@ -22,7 +23,13 @@ public class Game {
 		for (int i = 0; i < PLAYER_SIZE; i++) {
             players[i].setCard(1, deck.deal());
             players[i].setCard(2, deck.deal());
+
+            System.out.println("Player" + i + "'s Cards: " + players[i].toString());
 		}
+    }
+
+    private void getFlopAction() {
+        
     }
 
     public static void main(String[] args) {
