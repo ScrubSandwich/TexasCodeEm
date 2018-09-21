@@ -2,12 +2,17 @@ public class Game {
 
     private static int PLAYER_SIZE = 2;
     private Player[] players;
-	private Deck;
+	private Deck deck;
 
-    private boolean running = false;
+    private boolean running = true;
 
-    public void Game(Player[] players) {
-        players = new Player[players.length];
+    public Game(Player[] p) {
+        this.players = new Player[p.length];
+
+        for (int i = 0; i < PLAYER_SIZE; i++) {
+            this.players[i] = p[i];
+        }
+
 		deck = new Deck();
         deck.shuffle();
     }
@@ -15,6 +20,8 @@ public class Game {
     public void start() {
         while (running) {
             dealToPlayers();
+            getFlopAction();
+            running = false;
         }
     }
 
@@ -22,14 +29,21 @@ public class Game {
 		for (int i = 0; i < PLAYER_SIZE; i++) {
             players[i].setCard(1, deck.deal());
             players[i].setCard(2, deck.deal());
+
+            System.out.println("Player" + i + "'s Cards: " + players[i].getCard(1).toString());
+            System.out.println("Player" + i + "'s Cards: " + players[i].getCard(2).toString());
 		}
+    }
+
+    private void getFlopAction() {
+
     }
 
     public static void main(String[] args) {
       Player[] players = new Player[PLAYER_SIZE];
 
       for (int i = 0; i < PLAYER_SIZE; i++) {
-          players[i] = "Player" + (i + 1);
+          players[i] = new Player("Player" + (i + 1));
       }
 
       Game game = new Game(players);

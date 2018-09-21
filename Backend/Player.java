@@ -4,8 +4,13 @@ public class Player {
     private Card card1;
     private Card card2;
 
+    private double stack;
+    private double DEFAULT_STACK_SIZE = 50;
+    private boolean inHand;
+
     public Player(String name) {
         this.name = name;
+        this.stack = DEFAULT_STACK_SIZE;
     }
 
     public void setCard(int i, Card card) {
