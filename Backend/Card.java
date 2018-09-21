@@ -45,9 +45,8 @@ public class Card {
             case "J":   return JACK;
             case "Q":   return QUEEN;
             case "K":   return KING;
+            default:    return -1;
         }
-
-        return -1;
     }
     
     public String getNumberString(){
@@ -65,9 +64,8 @@ public class Card {
             case JACK:  return "J";
             case QUEEN: return "Q";
             case KING:  return "K";
+            default:    return "INVALID NUMBER";
         }
-
-        return "INVALID NUMBER";
     }
 
     public int getSuitNumber(String s) {
@@ -87,9 +85,8 @@ public class Card {
            case HEART:   return "H";
            case DIAMOND: return "D";
            case CLUB:    return "C";
+           default:      return "INVALID SUIT";
         }
-
-        return "INVALID SUIT";
     }
     
     @Override
