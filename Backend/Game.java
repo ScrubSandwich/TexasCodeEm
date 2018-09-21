@@ -4,7 +4,7 @@ public class Game {
     private Player[] players;
 	private Deck deck;
 
-    private boolean running = false;
+    private boolean running = true;
 
     public Game(Player[] players) {
         players = new Player[players.length];
