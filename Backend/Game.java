@@ -10,8 +10,8 @@ public class Game {
     private Scanner s;
 
     private double pot;
-    private static final double smallBlind = 1.0;
-    private static final double bigBlind = 2.0;
+    private static final double smallBlind = 0.5;
+    private static final double bigBlind = 1.0;
 
     public Game(Player[] p) {
         this.players = new Player[p.length];
@@ -40,14 +40,55 @@ public class Game {
             players[i].setCard(1, deck.deal());
             players[i].setCard(2, deck.deal());
 
-            //System.out.println("Player" + i + "'s Cards: " + players[i].getCard(1).toString());
-            //System.out.println("Player" + i + "'s Cards: " + players[i].getCard(2).toString());
+            System.out.println("Player" + i + "'s Cards: " + players[i].getCard(1).toString());
+            System.out.println("Player" + i + "'s Cards: " + players[i].getCard(2).toString());
 		}
+        System.out.print("\n");
     }
 
     private void getPreFlopAction() {
-        for (int i = 0; i < PLAYER_SIZE; i++) {
-            
+        s = new Scanner(System.in);
+        pot = 0.0;
+        //establish sb
+        System.out.println(players[0].getName() + " is Small Blind.");
+        players[0].setStack(players[0].getStack() - smallBlind);
+        pot += smallBlind;
+
+        //establish bb
+        System.out.println(players[1].getName() + " is Big Blind. \n");
+        players[1].setStack(players[1].getStack() - bigBlind);
+        pot += bigBlind;
+
+        System.out.println(players[0].getName() + "'s action. Pot = " + pot + " Stack = " + players[0].getStack());
+
+        decision:
+        while(true) {
+            System.out.println("Enter your decision: ");
+            System.out.println("[c] - call (0.5)");
+            System.out.println("[r] - raise");
+            System.out.println("[f] - fold");
+            System.out.println("");
+
+            String buttonDecision = s.nextLine();
+            switch(buttonDecision) {
+                case "c": players[0].setStack(players[0].getStack() - 0.5);
+                          pot += 0.5;
+                          break decision;
+                case "r": raise:
+                        while (true) {
+                            System.out.println("Enter total raise size: ");
+                            double raise = s.nextDouble();
+                            if (! (raise >= 2 * bigBlind)) {
+                                System.out.println("Invalid raise size!");
+                                continue raise;
+                            } 
+                            pot += raise - smallBlind;
+                            break decision;
+                        }
+                case "f": players[0].setInHand(false);
+                        return;
+                default: System.out.println("Invalid option.");
+            }
         }
     }
 

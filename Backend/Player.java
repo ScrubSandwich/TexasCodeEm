@@ -5,7 +5,7 @@ public class Player {
     private Card card2;
 
     private double stack;
-    private double DEFAULT_STACK_SIZE = 50;
+    private double DEFAULT_STACK_SIZE = 100;
     private boolean inHand;
 
     public Player(String name) {
