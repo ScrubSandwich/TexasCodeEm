@@ -6,7 +6,7 @@ public class Game {
 
     private boolean running = false;
 
-    public void Game(Player[] players) {
+    public Game(Player[] players) {
         players = new Player[players.length];
 		deck = new Deck();
         deck.shuffle();
