@@ -31,6 +31,22 @@ public class Player {
         return null;
     }
 
+    public void setInHand(boolean new) {
+        inHand = new;
+    }
+
+    public boolean getInHand() {
+        return inHand;
+    }
+
+    public void setStack(double new) {
+        stack = new;
+    }
+
+    public double getStack() {
+        return stack;
+    }
+
     public String getName(){
         return name;
     }
