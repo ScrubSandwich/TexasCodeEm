@@ -8,7 +8,7 @@ public class Deck {
     public Deck(){
         deck = new Card[52];
         cardsUsed = 0;
-        currentCard = 0;        
+        currentCard = 0;
         
         //Assign each card into the deck in order
         for (int suit = 0; suit < 4; suit++){
