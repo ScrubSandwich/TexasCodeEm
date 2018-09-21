@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Game {
 
     private static int PLAYER_SIZE = 2;
@@ -42,6 +44,10 @@ public class Game {
         for (int i = 0; i < PLAYER_SIZE; i++) {
             
         }
+    }
+
+    private void getFlopAction() {
+        
     }
 
     public static void main(String[] args) {

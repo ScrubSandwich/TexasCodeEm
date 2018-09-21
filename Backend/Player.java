@@ -31,16 +31,16 @@ public class Player {
         return null;
     }
 
-    public void setInHand(boolean new) {
-        inHand = new;
+    public void setInHand(boolean newInHand) {
+        this.inHand = newInHand;
     }
 
     public boolean getInHand() {
         return inHand;
     }
 
-    public void setStack(double new) {
-        stack = new;
+    public void setStack(double newStack) {
+        this.stack = newStack;
     }
 
     public double getStack() {
