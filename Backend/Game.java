@@ -40,8 +40,7 @@ public class Game {
             players[i].setCard(1, deck.deal());
             players[i].setCard(2, deck.deal());
 
-            System.out.println("Player" + i + "'s Cards: " + players[i].getCard(1).toString());
-            System.out.println("Player" + i + "'s Cards: " + players[i].getCard(2).toString());
+            System.out.println("Player" + i + "'s Hand: " + players[i].getCard(1).toString() + players[i].getCard(2).toString());
 		}
         System.out.print("\n");
     }
@@ -134,7 +133,7 @@ public class Game {
     }
 
     private void getFlopAction() {
-        System.out.println("The flop is " + deck.deal().toString() + deck.deal().toString() + deck.deal().toString());
+        System.out.println("The flop is " + deck.deal().toString() + " " + deck.deal().toString() + " " + deck.deal().toString());
     }
 
     private void moveButton() {
