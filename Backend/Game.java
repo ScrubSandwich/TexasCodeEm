@@ -5,9 +5,11 @@ public class Game {
 	private Deck deck;
 
     private boolean running = true;
+    private Scanner s;
 
     public Game(Player[] p) {
         this.players = new Player[p.length];
+        s = new Scanner(System.in);
 
         for (int i = 0; i < PLAYER_SIZE; i++) {
             this.players[i] = p[i];
@@ -20,6 +22,7 @@ public class Game {
     public void start() {
         while (running) {
             dealToPlayers();
+            getPreFlopAction();
             getFlopAction();
             running = false;
         }
@@ -35,8 +38,10 @@ public class Game {
 		}
     }
 
-    private void getFlopAction() {
-
+    private void getPreFlopAction() {
+        for (int i = 0; i < PLAYER_SIZE; i++) {
+            
+        }
     }
 
     public static void main(String[] args) {
