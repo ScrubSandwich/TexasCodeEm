@@ -2,12 +2,16 @@ import java.util.Scanner;
 
 public class Game {
 
-    private static int PLAYER_SIZE = 2;
+    private static final int PLAYER_SIZE = 2;
     private Player[] players;
 	private Deck deck;
 
     private boolean running = true;
     private Scanner s;
+
+    private double pot;
+    private static final double smallBlind = 1.0;
+    private static final double bigBlind = 2.0;
 
     public Game(Player[] p) {
         this.players = new Player[p.length];
@@ -47,7 +51,7 @@ public class Game {
     }
 
     private void getFlopAction() {
-        
+
     }
 
     public static void main(String[] args) {
