@@ -2,7 +2,7 @@ public class Game {
 
     private static int PLAYER_SIZE = 2;
     private Player[] players;
-	private Deck;
+	private Deck deck;
 
     private boolean running = false;
 
@@ -29,7 +29,7 @@ public class Game {
     }
 
     private void getFlopAction() {
-        
+
     }
 
     public static void main(String[] args) {
