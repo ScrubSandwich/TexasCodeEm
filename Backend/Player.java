@@ -23,6 +23,10 @@ public class Player {
         } else if (i == 2) {
             return card2;
         }
+        return null;
     }
 
+    public String getName(){
+        return name;
+    }
 }
