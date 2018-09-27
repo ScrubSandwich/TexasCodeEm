@@ -5,6 +5,7 @@ public class Game {
     private static final int PLAYER_SIZE = 2;
     private Player[] players;
 	private Deck deck;
+    private Board board;
 
     private boolean running = true;
     private Scanner s;
@@ -157,7 +158,12 @@ public class Game {
         
 
     private void getFlopAction() {
-        System.out.println("The flop is " + deck.deal().toString() + " " + deck.deal().toString() + " " + deck.deal().toString());
+        board = new Board();
+        board.addCard(0, deck.deal());
+        board.addCard(1, deck.deal());
+        board.addCard(2, deck.deal());
+
+        System.out.println("\nThe flop is " + board.getCard(0).toString() + " " + board.getCard(1).toString() + " " + board.getCard(2).toString());
     }
 
     // switches the order of players; the first player in the array is the button
