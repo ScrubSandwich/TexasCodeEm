@@ -103,6 +103,7 @@ public class Game {
         while (true) {
             System.out.println("Enter total raise size: ");
             double raise = s.nextDouble();
+            s.nextLine();
             if (! (raise >= 2 * pot)) {
                 System.out.println("Invalid raise size!");
                 continue;
