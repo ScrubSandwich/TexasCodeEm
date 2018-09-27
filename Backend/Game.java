@@ -84,8 +84,8 @@ public class Game {
                               break sbDecision;
                     case "r": raise(players[0]);
                               break sbDecision;
-                    case "f": players[0].setInHand(false);
-                            return;
+                    case "f": fold(players[0]);
+                              return;
                     default: System.out.println("Invalid option.");
                             continue sbDecision;
                 }
@@ -118,15 +118,24 @@ public class Game {
                               break bbDecision;
                     case "r": raise(players[1]);
                               break bbDecision;
-                    case "f": players[1].setInHand(false);
-                            return;
+                    case "f": fold(players[1]);
+                              return;
                     default: System.out.println("Invalid option.");
                             continue bbDecision;
                 }
             }
         }
     }
-    
+
+    private void getFlopAction() {
+        board = new Board();
+        board.addCard(0, deck.deal());
+        board.addCard(1, deck.deal());
+        board.addCard(2, deck.deal());
+
+        System.out.println("\nThe flop is " + board.getCard(0).toString() + " " + board.getCard(1).toString() + " " + board.getCard(2).toString());
+    }
+
     private void raise(Player p) {
         while (true) {
             System.out.println("Enter total raise size: ");
@@ -146,17 +155,10 @@ public class Game {
         p.setStack(p.getStack() - amount);
         pot += amount;
         p.setPutInPot(p.getPutInPot() + amount);
-}
+    }
 
-        
-
-    private void getFlopAction() {
-        board = new Board();
-        board.addCard(0, deck.deal());
-        board.addCard(1, deck.deal());
-        board.addCard(2, deck.deal());
-
-        System.out.println("\nThe flop is " + board.getCard(0).toString() + " " + board.getCard(1).toString() + " " + board.getCard(2).toString());
+    private void fold(Player p) {
+        p.setInHand(false);
     }
 
     // switches the order of players; the first player in the array is the button
