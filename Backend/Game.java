@@ -69,18 +69,19 @@ public class Game {
             String buttonDecision;
             sbDecision:
             while (true) {
-                double callAmount = pot - 2 * players[0].getPutInPot();
+                System.out.println(players[0].getPutInPot());
+                double buttonCallAmount = pot - 2 * players[0].getPutInPot();
                 System.out.println("Enter your decision: ");
-                System.out.println("[c] - call ("+ callAmount +")");
+                System.out.println("[c] - call ("+ buttonCallAmount +")");
                 System.out.println("[r] - raise");
                 System.out.println("[f] - fold");
                 System.out.println("");
 
                 buttonDecision = s.nextLine();
                 switch(buttonDecision) {
-                    case "c": players[0].setStack(players[0].getStack() - callAmount);
-                            pot += 0.5;
-                            players[0].setPutInPot(players[0].getPutInPot() + callAmount);
+                    case "c": players[0].setStack(players[0].getStack() - buttonCallAmount);
+                            pot += buttonCallAmount;
+                            players[0].setPutInPot(players[0].getPutInPot() + buttonCallAmount);
                             break sbDecision;
                     case "r": raise:
                             while (true) {
@@ -90,7 +91,8 @@ public class Game {
                                     System.out.println("Invalid raise size!");
                                     continue raise;
                                 } 
-                                pot += raise - smallBlind;
+                                pot += raise - players[0].getPutInPot();
+                                players[0].setStack(players[0].getStack() - raise + players[0].getPutInPot());
                                 players[0].setPutInPot(raise);
                                 break sbDecision;
                             }
@@ -105,10 +107,10 @@ public class Game {
                 return;
             }
 
-            System.out.println(players[1].getName() + "'s action. Pot = " + pot + " Stack = " + players[1].getStack());
-
+            
             bbDecision:
             while (true) {
+                System.out.println(players[1].getName() + "'s action. Pot = " + pot + " Stack = " + players[1].getStack());
                 double callAmount = pot - 2 * players[1].getPutInPot();
                 System.out.println("Enter your decision: ");
                 if (pot == 2.0) {
@@ -128,21 +130,20 @@ public class Game {
                             pot += callAmount;
                             players[1].setPutInPot(players[1].getPutInPot() + callAmount);
                             break bbDecision;
-                    case "r": raise:
+                    case "r": BBRaise:
                             while (true) {
                                 System.out.println("Enter total raise size: ");
                                 double raise = s.nextDouble();
                                 if (! (raise >= 2 * pot)) {
                                     System.out.println("Invalid raise size!");
-                                    continue raise;
+                                    continue BBRaise;
                                 } 
-                                pot += raise - bigBlind;
-                                players[1].setStack(players[1].getStack() - raise);
+                                pot += raise - players[1].getPutInPot();
+                                players[1].setStack(players[1].getStack() - raise + players[1].getPutInPot());
                                 System.out.println(players[0].getStack() + " " + players[1].getStack());
                                 players[1].setPutInPot(raise);
-                                break raise;
+                                break bbDecision;
                             }
-                            break;
                     case "f": players[1].setInHand(false);
                             return;
                     default: System.out.println("Invalid option.");
