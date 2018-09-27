@@ -51,6 +51,7 @@ public class Game {
     private void getPreFlopAction() {
         s = new Scanner(System.in);
         pot = 0.0;
+
         //establish sb
         System.out.println(players[0].getName() + " is Small Blind.");
         players[0].setStack(players[0].getStack() - smallBlind);
@@ -65,64 +66,26 @@ public class Game {
 
         preFlopAction:
         while(players[0].getStack() != players[1].getStack()) {
-            System.out.println(players[0].getName() + "'s action. Pot = " + pot + " Stack = " + players[0].getStack());
+            System.out.println("\n" + players[0].getName() + "'s action. Pot = " + pot + " Stack = " + players[0].getStack());
 
-            String buttonDecision;
-            sbDecision:
-            while (true) {
-                System.out.println(players[0].getPutInPot());
-                double buttonCallAmount = pot - 2 * players[0].getPutInPot();
-                System.out.println("Enter your decision: ");
-                System.out.println("[c] - call ("+ buttonCallAmount +")");
-                System.out.println("[r] - raise");
-                System.out.println("[f] - fold");
-                System.out.println("");
-
-                buttonDecision = s.nextLine();
-                switch(buttonDecision) {
-                    case "c": call(players[0], buttonCallAmount);
-                              break sbDecision;
-                    case "r": raise(players[0]);
-                              break sbDecision;
-                    case "f": fold(players[0]);
-                              return;
-                    default: System.out.println("Invalid option.");
-                            continue sbDecision;
-                }
-            }
-
-            if (buttonDecision.equals("c") && pot != 2.0) {
+            decision(players[0]);
+            if (players[0].getPutInPot() == players[1].getPutInPot() && pot != 2.0) {
                 return;
             }
 
-            
-            bbDecision:
-            while (true) {
-                System.out.println(players[1].getName() + "'s action. Pot = " + pot + " Stack = " + players[1].getStack());
-                double callAmount = pot - 2 * players[1].getPutInPot();
+            System.out.println("\n" + players[1].getName() + "'s action. Pot = " + pot + " Stack = " + players[1].getStack());
+            if (pot == 2.0) {
                 System.out.println("Enter your decision: ");
-                if (pot == 2.0) {
-                    System.out.println("[x] - check");
-                    System.out.println("[r] - raise");
-                } else {
-                    System.out.println("[c] - call (" + callAmount + ")");
-                    System.out.println("[r] - raise");
-                    System.out.println("[f] - fold \n");
-                }
-
-               // s.nextLine();
-                String bbDecision = s.nextLine();
-                switch(bbDecision) {
+                System.out.println("[x] - check");
+                System.out.println("[r] - raise");
+                String decision = s.nextLine();
+                switch (decision) {
                     case "x": return;
-                    case "c": call(players[1], callAmount);
-                              break bbDecision;
                     case "r": raise(players[1]);
-                              break bbDecision;
-                    case "f": fold(players[1]);
-                              return;
-                    default: System.out.println("Invalid option.");
-                            continue bbDecision;
+                              break;
                 }
+            } else {
+                decision(players[1]);
             }
         }
     }
@@ -159,6 +122,34 @@ public class Game {
 
     private void fold(Player p) {
         p.setInHand(false);
+    }
+
+    private void decision(Player p) {
+        String decision;
+        while (true) {
+            double callAmount = pot - 2 * p.getPutInPot();
+            System.out.println("Enter your decision: ");
+            System.out.println("[c] - call ("+ callAmount +")");
+            System.out.println("[r] - raise");
+            System.out.println("[f] - fold");
+            System.out.println("");
+
+            decision = s.nextLine();
+            switch(decision) {
+                case "c": call(p, callAmount);
+                          return;
+                case "r": raise(p);
+                          return;
+                case "f": fold(p);
+                          return;
+                default: System.out.println("Invalid option.");
+                         continue;
+            }
+        }
+    }
+
+    private void decisionWithCheck(Player p) {
+
     }
 
     // switches the order of players; the first player in the array is the button
