@@ -80,10 +80,8 @@ public class Game {
 
                 buttonDecision = s.nextLine();
                 switch(buttonDecision) {
-                    case "c": players[0].setStack(players[0].getStack() - buttonCallAmount);
-                            pot += buttonCallAmount;
-                            players[0].setPutInPot(players[0].getPutInPot() + buttonCallAmount);
-                            break sbDecision;
+                    case "c": call(players[0], buttonCallAmount);
+                              break sbDecision;
                     case "r": raise(players[0]);
                               break sbDecision;
                     case "f": players[0].setInHand(false);
@@ -112,14 +110,12 @@ public class Game {
                     System.out.println("[f] - fold \n");
                 }
 
-                s.nextLine();
+               // s.nextLine();
                 String bbDecision = s.nextLine();
                 switch(bbDecision) {
                     case "x": return;
-                    case "c": players[1].setStack(players[1].getStack() - callAmount);
-                            pot += callAmount;
-                            players[1].setPutInPot(players[1].getPutInPot() + callAmount);
-                            break bbDecision;
+                    case "c": call(players[1], callAmount);
+                              break bbDecision;
                     case "r": raise(players[1]);
                               break bbDecision;
                     case "f": players[1].setInHand(false);
@@ -145,7 +141,13 @@ public class Game {
             return;
         }
     }
-        
+
+    private void call(Player p, double amount) {
+        p.setStack(p.getStack() - amount);
+        pot += amount;
+        p.setPutInPot(p.getPutInPot() + amount);
+}
+
         
 
     private void getFlopAction() {
