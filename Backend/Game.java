@@ -84,19 +84,8 @@ public class Game {
                             pot += buttonCallAmount;
                             players[0].setPutInPot(players[0].getPutInPot() + buttonCallAmount);
                             break sbDecision;
-                    case "r": raise:
-                            while (true) {
-                                System.out.println("Enter total raise size: ");
-                                double raise = s.nextDouble();
-                                if (! (raise >= 2 * bigBlind)) {
-                                    System.out.println("Invalid raise size!");
-                                    continue raise;
-                                } 
-                                pot += raise - players[0].getPutInPot();
-                                players[0].setStack(players[0].getStack() - raise + players[0].getPutInPot());
-                                players[0].setPutInPot(raise);
-                                break sbDecision;
-                            }
+                    case "r": raise(players[0]);
+                              break sbDecision;
                     case "f": players[0].setInHand(false);
                             return;
                     default: System.out.println("Invalid option.");
@@ -131,20 +120,8 @@ public class Game {
                             pot += callAmount;
                             players[1].setPutInPot(players[1].getPutInPot() + callAmount);
                             break bbDecision;
-                    case "r": BBRaise:
-                            while (true) {
-                                System.out.println("Enter total raise size: ");
-                                double raise = s.nextDouble();
-                                if (! (raise >= 2 * pot)) {
-                                    System.out.println("Invalid raise size!");
-                                    continue BBRaise;
-                                } 
-                                pot += raise - players[1].getPutInPot();
-                                players[1].setStack(players[1].getStack() - raise + players[1].getPutInPot());
-                                System.out.println(players[0].getStack() + " " + players[1].getStack());
-                                players[1].setPutInPot(raise);
-                                break bbDecision;
-                            }
+                    case "r": raise(players[1]);
+                              break bbDecision;
                     case "f": players[1].setInHand(false);
                             return;
                     default: System.out.println("Invalid option.");
@@ -154,6 +131,20 @@ public class Game {
         }
     }
     
+    private void raise(Player p) {
+        while (true) {
+            System.out.println("Enter total raise size: ");
+            double raise = s.nextDouble();
+            if (! (raise >= 2 * pot)) {
+                System.out.println("Invalid raise size!");
+                continue;
+            } 
+            pot += raise - p.getPutInPot();
+            p.setStack(p.getStack() - raise + p.getPutInPot());
+            p.setPutInPot(raise);
+            return;
+        }
+    }
         
         
 
