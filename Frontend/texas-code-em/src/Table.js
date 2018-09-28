@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import "./Table.css"
+import "./Table.css";
+import ButtonPanel from "./ButtonPanel.js";
 
 class Table extends Component {
   render() {
@@ -17,6 +18,8 @@ class Table extends Component {
               fill="#1aa70e"  />              
               <text x="530" y="275" font-size="50">Texas Code 'Em</text>
           </svg>
+
+        <ButtonPanel />
       </div>
     );
   }

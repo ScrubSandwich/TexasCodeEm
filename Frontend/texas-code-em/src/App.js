@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import Table from './Table';
+import ButtonPanel from "./ButtonPanel"
 
 class App extends Component {
   render() {

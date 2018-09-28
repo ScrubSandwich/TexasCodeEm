@@ -1,6 +1,6 @@
 .App {
   text-align: center;
-  display: block;
+  position: absolute;
 }
 
 html, body {
