@@ -1,16 +1,21 @@
 import React, { Component } from 'react';
+import LogoText from './LogoText';
 
 class Table extends Component {
   render() {
-    const viewBox = [0, 0, window.innerWidth + 500, window.innerHeight];
+    const viewBox = [0, 0, window.innerWidth, window.innerHeight];
 
     return (
       <div className="Table">
-         <svg xmlns="http://www.w3.org/2000/svg" viewBox={viewBox}>
-            <ellipse cx="2500" cy="1250"
-            rx="2250" ry="1100"
-            stroke="#05a912" stroke-width="15"
-            fill="#05a912" />
+         <svg
+            id="table"
+            preserveAspectRatio="xMaxYMax none"
+            viewBox={viewBox} >
+            <ellipse cx="700" cy="360"
+              rx="600" ry="300"
+              stroke="#1aa70e" stroke-width="15"
+              fill="#1aa70e"  />
+            <LogoText />
           </svg>
       </div>
     );
