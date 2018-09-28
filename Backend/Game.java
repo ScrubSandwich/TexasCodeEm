@@ -32,6 +32,7 @@ public class Game {
             moveButton();
             getPreFlopAction();
             getFlopAction();
+            getTurnAction();
             running = false;
         }
     }
@@ -51,6 +52,8 @@ public class Game {
     private void getPreFlopAction() {
         s = new Scanner(System.in);
         pot = 0.0;
+        players[0].setPutInPot(0.0);
+        players[1].setPutInPot(0.0);
 
         //establish sb
         System.out.println(players[0].getName() + " is Small Blind.");
@@ -64,17 +67,16 @@ public class Game {
         pot += bigBlind;
         players[1].setPutInPot(bigBlind);
 
-        preFlopAction:
         while(players[0].getStack() != players[1].getStack()) {
-            System.out.println("\n" + players[0].getName() + "'s action. Pot = " + pot + " Stack = " + players[0].getStack());
-
             decision(players[0]);
+
             if (players[0].getPutInPot() == players[1].getPutInPot() && pot != 2.0) {
                 return;
             }
 
-            System.out.println("\n" + players[1].getName() + "'s action. Pot = " + pot + " Stack = " + players[1].getStack());
+           
             if (pot == 2.0) {
+                System.out.println("\n" + players[1].getName() + "'s action. Pot = " + pot + " Stack = " + players[1].getStack());
                 System.out.println("Enter your decision: ");
                 System.out.println("[x] - check");
                 System.out.println("[r] - raise");
@@ -91,12 +93,34 @@ public class Game {
     }
 
     private void getFlopAction() {
+        double tempPot = pot;
         board = new Board();
         board.addCard(0, deck.deal());
         board.addCard(1, deck.deal());
         board.addCard(2, deck.deal());
 
         System.out.println("\nThe flop is " + board.getCard(0).toString() + " " + board.getCard(1).toString() + " " + board.getCard(2).toString());
+        decisionWithCheck(players[1], "flop");
+
+        do {
+            if (tempPot == pot) {
+                decisionWithCheck(players[0], "flop");
+            }
+            decision(players[1]);
+            decision(players[0]);
+        } while (players[0].getStack() != players[1].getStack());
+    }
+
+    private void getTurnAction() {
+        System.out.println("hello");
+    }
+
+    private void getRiverAction() {
+
+    }
+
+    private void showDown() {
+
     }
 
     private void raise(Player p) {
@@ -123,9 +147,35 @@ public class Game {
 
     private void fold(Player p) {
         p.setInHand(false);
+        if (p.equals(players[0])) {
+            System.out.println("Player 1 wins " + pot + ".");
+            players[1].setStack(players[1].getStack() + pot);
+            start();
+        } else {
+            System.out.println("Player 0 wins " + pot + ".");
+            players[1].setStack(players[0].getStack() + pot);
+            start();
+        }
+    }
+
+    private void bet(Player p) {
+        while (true) {
+            System.out.println("Enter size of bet: ");
+            double bet = s.nextDouble();
+            s.nextLine();
+            if (bet < 1.0) {
+                System.out.println("Invalid bet size.");
+                continue;
+            }
+            pot += bet;
+            p.setPutInPot(p.getPutInPot() + bet);
+            p.setStack(p.getStack() - bet);
+            break;
+        }
     }
 
     private void decision(Player p) {
+        System.out.println("\n" + p.getName() + "'s action. Pot = " + pot + " Stack = " + p.getStack());
         String decision;
         while (true) {
             double callAmount = pot - 2 * p.getPutInPot();
@@ -149,8 +199,31 @@ public class Game {
         }
     }
 
-    private void decisionWithCheck(Player p) {
+    private void decisionWithCheck(Player p, String street) {
+        System.out.println("\n" + p.getName() + "'s action. Pot = " + pot + " Stack = " + p.getStack());
+        String decision;
+        while (true) {
+            System.out.println("Enter your decision: ");
+            System.out.println("[x] - check");
+            System.out.println("[b] - bet");
 
+            decision = s.nextLine();
+            switch(decision) {
+                case "b": bet(p);
+                          return;
+                case "x": if (p.equals(players[1])) { 
+                            return;
+                          } else if (street.equals("flop")) {
+                              getTurnAction();
+                          } else if (street.equals("turn")) {
+                              getRiverAction();
+                          } else if (street.equals("river")) {
+                              showDown();
+                          }
+                default: System.out.println("Invalid option.");
+                         continue;
+            }
+        }
     }
 
     // switches the order of players; the first player in the array is the button
