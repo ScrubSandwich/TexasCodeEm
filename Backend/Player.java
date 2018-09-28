@@ -5,12 +5,14 @@ public class Player {
     private Card card2;
 
     private double stack;
-    private double DEFAULT_STACK_SIZE = 50;
+    private double putInPot;
+    private double DEFAULT_STACK_SIZE = 100;
     private boolean inHand;
 
     public Player(String name) {
         this.name = name;
         this.stack = DEFAULT_STACK_SIZE;
+        this.putInPot = 0;
     }
 
     public void setCard(int i, Card card) {
@@ -49,5 +51,13 @@ public class Player {
 
     public String getName(){
         return name;
+    }
+
+    public void setPutInPot(double putInPot) {
+        this.putInPot = putInPot;
+    }
+
+    public double getPutInPot() {
+        return this.putInPot;
     }
 }
