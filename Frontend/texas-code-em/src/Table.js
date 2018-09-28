@@ -1,8 +1,20 @@
 import React, { Component } from 'react';
 import "./Table.css";
 import ButtonPanel from "./ButtonPanel.js";
+import axios from 'axios'
 
 class Table extends Component {
+
+  componentWillMount = () => {
+    const url = "localhost:8080/hello";
+
+    axios.get(url)
+      .then(res => {
+        console.log(res);
+      })
+  }
+
+
   render() {
     const viewBox = [0, 0, window.innerWidth, window.innerHeight];
 
