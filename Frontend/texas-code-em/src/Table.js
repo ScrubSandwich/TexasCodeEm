@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import LogoText from './LogoText';
+import "./Table.css"
 
 class Table extends Component {
   render() {
@@ -14,8 +14,8 @@ class Table extends Component {
             <ellipse cx="700" cy="360"
               rx="600" ry="300"
               stroke="#1aa70e" stroke-width="15"
-              fill="#1aa70e"  />
-            <LogoText />
+              fill="#1aa70e"  />              
+              <text x="530" y="275" font-size="50">Texas Code 'Em</text>
           </svg>
       </div>
     );
