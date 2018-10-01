@@ -1,0 +1,10 @@
+.ButtonPanel {
+  position: absolute;
+  bottom: 0em;
+  right: 0em;
+  background-color: gainsboro;
+  background-size: 2rem;
+  height: 10rem;
+  width: 20rem;
+  border-radius: 40%;
+}
