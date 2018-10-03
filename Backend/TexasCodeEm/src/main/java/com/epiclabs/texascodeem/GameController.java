@@ -16,11 +16,11 @@ public class GameController {
 	
 	public Map<String, Object> generateUserID(@RequestParam Map<String, Object> body) {
 		Map<String, Object> response = new HashMap<String, Object>();
-		String user = body.get("username").toString();
+		//String user = body.get("username").toString();
 		
 		String ID = Utility.makeID();
 		response.put("status", HttpStatus.OK);
-		response.put("username", ID);
+		response.put("userID", ID);
 		return response;
 	}
 	
