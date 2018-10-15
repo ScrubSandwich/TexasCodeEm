@@ -17,11 +17,13 @@ class App extends Component {
     console.log("Getting userId from backend...");
     const url = "http://localhost:8080/api/generateUserId";
 
-    axios.get(url)
+    axios.post(url, {
+      "test": "test"
+    })
       .then(res => {
-        console.log("User ID: " + res.userId);
+        console.log("User ID: " + res.data.userID);
 
-        localStorage.setItem("UserId", res.userId);
+        localStorage.setItem("userId", res.data.userID);
       })
   }
   
