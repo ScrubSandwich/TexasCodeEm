@@ -27,7 +27,7 @@ public class Player {
     }
 
     public void setStackSize(int stackSize) {
-        this.stackSize = stackSize;
+        stackSize = stackSize;
     }
 
     public void incrementStack(int size) {
