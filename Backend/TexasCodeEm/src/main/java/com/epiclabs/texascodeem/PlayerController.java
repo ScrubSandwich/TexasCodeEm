@@ -14,6 +14,10 @@ public class PlayerController {
 
     private static List<Player> players = new ArrayList<>();
 
+    public static List<Player> getPlayersList() {
+        return players;
+    }
+
     public static Map<String, Object> getPlayers() {
         Map<String, Object> response = new HashMap<>();
         List< Map<String, Object> > playersObject = new ArrayList<>();
@@ -32,6 +36,7 @@ public class PlayerController {
         response.put("players", playersObject);
         response.put("status", HttpStatus.OK);
         return response;
+
     }
 
     public static void addPlayer(Player p) {
