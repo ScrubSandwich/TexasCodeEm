@@ -6,12 +6,10 @@ public class Player {
     private final String id;
     private int stackSize;
 
-    private final int DEFAULT_STACK_SIZE = 5000;
-
     public Player(String name, String id) {
         this.name = name;
         this.id = id;
-        this.stackSize = DEFAULT_STACK_SIZE;
+        this.stackSize = Values.DEFAULT_STACK_SIZE;
     }
 
     public String getName() {

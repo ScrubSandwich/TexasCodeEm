@@ -16,7 +16,14 @@ public class TexasCodeEmApplication {
 
 	@Autowired
 	private PlayerController playerController;
-	
+
+	@CrossOrigin
+	@RequestMapping(value = "api/isReady", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> isReady() {
+		return gameController.isReady();
+	}
+
 	@CrossOrigin
 	@RequestMapping(value = "/api/generateUserId", method = RequestMethod.POST)
 	@ResponseBody
@@ -33,5 +40,6 @@ public class TexasCodeEmApplication {
 	
 	public static void main(String[] args) {
 		SpringApplication.run(TexasCodeEmApplication.class, args);
+		GameController.shuffle();
 	}
 }
