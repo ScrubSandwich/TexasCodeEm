@@ -22,7 +22,7 @@ public class PlayerController {
         Map<String, Object> response = new HashMap<>();
         List< Map<String, Object> > playersObject = new ArrayList<>();
 
-        for (int i = 0; i < players.size(); i++) {
+        for (int i = 0; i < players.size() + 1; i++) {
             Player player = players.get(i);
             Map<String, Object> playersMap = new HashMap<>();
 
