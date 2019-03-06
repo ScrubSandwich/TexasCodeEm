@@ -53,8 +53,11 @@ public class PlayerController {
             Player player = players.get(i);
 
             if (Integer.parseInt(player.getId()) == playerId) {
-                player.setCards()
+                player.setCards(cards);
+                return true;
             }
         }
+
+        return false;
     }
 }

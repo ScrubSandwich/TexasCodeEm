@@ -43,6 +43,7 @@ public class GameController {
 
 	public Map<String, Object> whoseTurn(Map<String, Object> body) {
 		String userId = body.get("userId").toString();
+		return null;
 	}
 
 	public Map<String, Object> generateUserID(Map<String, Object> body) {
