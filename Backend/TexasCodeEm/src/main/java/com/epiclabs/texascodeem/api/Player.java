@@ -5,6 +5,7 @@ public class Player {
     private final String name;
     private final String id;
     private int stackSize;
+    private boolean inHand;
     private Card[] cards;
 
     public Player(String name, String id) {
@@ -20,6 +21,10 @@ public class Player {
 
     public String getId() {
         return id;
+    }
+
+    public int getIdInt() {
+        return Integer.parseInt(id);
     }
 
     public boolean setCards(Card[] cards) {
@@ -53,5 +58,13 @@ public class Player {
 
     public void decrementStack(int size) {
         stackSize -= size;
+    }
+
+    public void setInHand(boolean inHand) {
+        this.inHand = inHand;
+    }
+
+    public boolean inHand() {
+        return inHand;
     }
 }

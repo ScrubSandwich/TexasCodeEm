@@ -13,6 +13,9 @@ public class GameController {
 	private static Deck deck  = new Deck();
 	private static int currentPlayerTurn = -1;
 	private static int currentBoard = Values.PREFLOP;
+	private static int closingAction = -1;
+	private static int currentBet = 0;
+	private static int pot = 0;
 
 	public Map<String, Object> isReady(Map<String, Object> body) {
 		Map<String, Object> response = new HashMap<>();
@@ -58,6 +61,47 @@ public class GameController {
 		return null;
 	}
 
+	public Map<String, Object> acceptTurn(Map<String, Object> body) {
+		Map<String, Object> response = new HashMap<>();
+		int userId = Integer.parseInt(body.get("userId").toString());
+
+		if (userId != currentPlayerTurn) {
+			response.put("status", HttpStatus.METHOD_NOT_ALLOWED);
+			response.put("message", "It is not your turn.");
+			return response;
+		}
+
+		String action = body.get("action").toString();
+
+		if (action.equals("check")) {
+			incrementPlayerTurn();
+		} else if (action.equals("call")) {
+			incrementPlayerTurn();
+			int remainingStack = PlayerController.subtractStack(userId, currentBet);
+
+			// This will add only what the player had left to the pot
+			if (remainingStack < 0) {
+				pot += (currentBet + remainingStack);
+			} else {
+				pot += currentBet;
+			}
+		} else if (action.equals("raise")) {
+			int raiseToTotal = Integer.parseInt(body.get("raiseSize").toString());
+			pot += currentBet + raiseToTotal;
+			currentBet = raiseToTotal;
+			closingAction = userId;
+		} else if (action.equals("fold")) {
+			PlayerController.setInHand(userId, false);
+		} else {
+			response.put("status", HttpStatus.NOT_ACCEPTABLE);
+			response.put("message", "Expected action to equal call, raise, check or fold");
+			return response;
+		}
+
+		response.put("status", HttpStatus.OK);
+		return response;
+	}
+
 	public Map<String, Object> generateUserID(Map<String, Object> body) {
 		Map<String, Object> response = new HashMap<>();
 
@@ -76,6 +120,27 @@ public class GameController {
 
 	public static void setCurrentPlayerTurn(int userId) {
 		currentPlayerTurn = userId;
+	}
+
+	public static void incrementPlayerTurn() {
+		List<Player> players = PlayerController.getPlayersList();
+		Player player;
+		int userId;
+
+		for (int i = 0; i < players.size(); i++) {
+			player = players.get(i);
+			userId = player.getIdInt();
+
+			if (userId == currentPlayerTurn) {
+				if (i == players.size() - 1) {
+					currentPlayerTurn = players.get(0).getIdInt();
+				} else {
+					currentPlayerTurn = players.get(++i).getIdInt();
+				}
+
+				break;
+			}
+		}
 	}
 
 	public static int getCurrentPlayerTurn() {

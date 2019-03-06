@@ -63,4 +63,29 @@ public class PlayerController {
 
         return false;
     }
+
+    // Returns remaining stack sizee; Negative if more than what is left is subtracted
+    public static int subtractStack(int userId, int amount) {
+        for (int i = 0; i < players.size(); i++) {
+            Player player = players.get(i);
+
+            if (player.getIdInt() == userId) {
+                int stack = player.getStackSize();
+                return stack - amount;
+            }
+        }
+
+        return Integer.MIN_VALUE;
+    }
+
+    public static void setInHand(int userId, boolean inHand) {
+        for (int i = 0; i < players.size(); i++) {
+            Player player = players.get(i);
+
+            if (player.getIdInt() == userId) {
+                player.setInHand(false);
+                return;
+            }
+        }
+    }
 }
