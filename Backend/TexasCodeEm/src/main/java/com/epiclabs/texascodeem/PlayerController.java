@@ -40,8 +40,8 @@ public class PlayerController {
 
     }
 
-    public static void addPlayer(Player p) {
-        players.add(p);
+    public static boolean addPlayer(Player p) {
+        return ( players.add(new Player(p.getName(), p.getId())) );
     }
 
     public static boolean removePlayer(Player p) {

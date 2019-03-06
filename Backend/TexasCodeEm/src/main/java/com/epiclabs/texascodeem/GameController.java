@@ -49,7 +49,7 @@ public class GameController {
 	public Map<String, Object> generateUserID(Map<String, Object> body) {
 		Map<String, Object> response = new HashMap<>();
 
-		String username = "usernameTest"; // = body.get("username").toString();
+		String username = body.get("username").toString();
 		String id = Utility.makeID();
 		PlayerController.addPlayer(new Player(username, id));
 
