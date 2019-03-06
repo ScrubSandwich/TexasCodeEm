@@ -26,7 +26,7 @@ public class Player {
     public int getIdInt() {
         return Integer.parseInt(id);
     }
-
+  
     public boolean setCards(Card[] cards) {
         if (Values.NUMBER_OF_CARDS != cards.length) {
             return false;

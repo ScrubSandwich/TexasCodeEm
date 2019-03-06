@@ -19,6 +19,7 @@ public class GameController {
 
 	public Map<String, Object> isReady(Map<String, Object> body) {
 		Map<String, Object> response = new HashMap<>();
+
 		List<Player> players = PlayerController.getPlayersList();
 		boolean isReady = players.size() >= Values.NUMBER_OF_PLAYERS;
 
