@@ -11,6 +11,7 @@ public class Player {
         this.name = name;
         this.id = id;
         this.stackSize = Values.DEFAULT_STACK_SIZE;
+        this.cards = new Card[Values.NUMBER_OF_CARDS];
     }
 
     public String getName() {
@@ -22,7 +23,7 @@ public class Player {
     }
 
     public boolean setCards(Card[] cards) {
-        if (this.cards.length != cards.length) {
+        if (Values.NUMBER_OF_CARDS != cards.length) {
             return false;
         }
 
