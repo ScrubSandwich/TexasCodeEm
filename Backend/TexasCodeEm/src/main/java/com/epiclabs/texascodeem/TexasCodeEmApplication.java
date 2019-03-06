@@ -28,8 +28,8 @@ public class TexasCodeEmApplication {
 	@CrossOrigin
 	@RequestMapping(value = "api/whoseTurn", method = RequestMethod.GET)
 	@ResponseBody
-	public Map(String, Object) whoseTurn() {
-		return gameController.whoseTurn();
+	public Map<String, Object> whoseTurn(@RequestBody Map<String, Object> body) {
+		return gameController.whoseTurn(body);
 	}
 
 	@CrossOrigin

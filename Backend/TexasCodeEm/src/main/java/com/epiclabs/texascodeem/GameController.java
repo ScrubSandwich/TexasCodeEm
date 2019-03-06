@@ -37,6 +37,10 @@ public class GameController {
 		return (response);
 	}
 
+	public Map<String, Object> whoseTurn(Map<String, Object> body) {
+		String userId = body.get("userId").toString();
+	}
+
 	public Map<String, Object> generateUserID(Map<String, Object> body) {
 		Map<String, Object> response = new HashMap<>();
 
