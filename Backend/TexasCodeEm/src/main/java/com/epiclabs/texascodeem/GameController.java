@@ -23,7 +23,7 @@ public class GameController {
 		boolean isReady = players.size() >= Values.NUMBER_OF_PLAYERS;
 
 		if (isReady) {
-			setCurrentPlayerTurn(Integer.parseInt(players.get(0).getId()));
+			setCurrentPlayerTurn();
 
 			Map<String, Object> cardsMap = new HashMap<>();
 			Card[] cards = new Card[Values.NUMBER_OF_CARDS];
@@ -53,12 +53,12 @@ public class GameController {
 	public Map<String, Object> whoseTurn(Map<String, Object> body) {
 		Map<String, Object> response = new HashMap<>();
 		String userId = body.get("userId").toString();
-		List<Player> players = PlayerController.getPlayersList();
+		//List<Player> players = PlayerController.getPlayersList();
 
 		response.put("status", HttpStatus.OK);
 		response.put("players", PlayerController.getPlayers());
 
-		return null;
+		return response;
 	}
 
 	public Map<String, Object> acceptTurn(Map<String, Object> body) {
@@ -74,9 +74,8 @@ public class GameController {
 		String action = body.get("action").toString();
 
 		if (action.equals("check")) {
-			incrementPlayerTurn();
+		    // Do nothing
 		} else if (action.equals("call")) {
-			incrementPlayerTurn();
 			int remainingStack = PlayerController.subtractStack(userId, currentBet);
 
 			// This will add only what the player had left to the pot
@@ -98,6 +97,8 @@ public class GameController {
 			return response;
 		}
 
+        boolean handOver = incrementPlayerTurn();
+
 		response.put("status", HttpStatus.OK);
 		return response;
 	}
@@ -118,11 +119,20 @@ public class GameController {
 		deck.shuffle();
 	}
 
-	public static void setCurrentPlayerTurn(int userId) {
-		currentPlayerTurn = userId;
+	private static void setCurrentPlayerTurn() {
+		List<Player> players = PlayerController.getPlayersList();
+		int len = players.size();
+
+		if (len == 2 || len == 3) {
+			currentPlayerTurn = players.get(0).getIdInt();
+		} else {
+			currentPlayerTurn = players.get(3).getIdInt();
+		}
+
 	}
 
-	public static void incrementPlayerTurn() {
+	// Returns true if the hand is over. False if hand is still going
+	public static boolean incrementPlayerTurn() {
 		List<Player> players = PlayerController.getPlayersList();
 		Player player;
 		int userId;
@@ -133,14 +143,37 @@ public class GameController {
 
 			if (userId == currentPlayerTurn) {
 				if (i == players.size() - 1) {
-					currentPlayerTurn = players.get(0).getIdInt();
-				} else {
-					currentPlayerTurn = players.get(++i).getIdInt();
-				}
+				    // Loop through to make sure the next player is in the hand
+                    for (int j = 0; j < players.size(); j++) {
+                        Player nextPlayer = players.get(j);
 
-				break;
+                        if (nextPlayer.inHand() && j != players.size() - 1) {
+                            currentPlayerTurn = nextPlayer.getIdInt();
+                            return false;
+                        }
+                    }
+				} else {
+                    // Loop through to make sure the next player is in the hand
+                    for (int j = i + 1; true; j++) {
+                        if (j == players.size() - 1) {
+                            j = 0;
+                        }
+
+                        Player nextPlayer = players.get(j);
+
+                        if (nextPlayer.inHand()) {
+                            currentPlayerTurn = nextPlayer.getIdInt();
+                            return false;
+                        }
+                    }
+				}
+                // If here is reached, then the hand is over
+                return true;
 			}
 		}
+
+        // Should never reach here
+        return true;
 	}
 
 	public static int getCurrentPlayerTurn() {
@@ -148,7 +181,10 @@ public class GameController {
 	}
 
 	public static boolean incrementBoard() {
-		if (++currentBoard > Values.RIVER) { return false; }
+		if (++currentBoard > Values.RIVER) {
+		    currentBoard = Values.PREFLOP;
+		    return false;
+		}
 		return true;
 	}
 
