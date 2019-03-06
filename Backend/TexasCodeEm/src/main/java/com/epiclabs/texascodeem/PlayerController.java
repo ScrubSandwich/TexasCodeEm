@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.epiclabs.texascodeem.api.Card;
+import com.epiclabs.texascodeem.api.Values;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -32,12 +33,14 @@ public class PlayerController {
             playersMap.put("id", player.getId());
             playersMap.put("stackSize", player.getStackSize());
 
+            boolean turn = Integer.parseInt(player.getId()) == GameController.getCurrentPlayerTurn();
+            playersMap.put("turn", turn);
+
             playersObject.add(playersMap);
         }
 
         response.put("players", playersObject);
         return response;
-
     }
 
     public static boolean addPlayer(Player p) {

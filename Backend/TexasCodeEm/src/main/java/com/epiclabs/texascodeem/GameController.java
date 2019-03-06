@@ -1,6 +1,7 @@
 package com.epiclabs.texascodeem;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import com.epiclabs.texascodeem.api.*;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Service;
 public class GameController {
 
 	private static Deck deck  = new Deck();
+	private static int currentPlayerTurn = -1;
+	private static int currentBoard = Values.PREFLOP;
 
 	public Map<String, Object> isReady(Map<String, Object> body) {
 		Map<String, Object> response = new HashMap<>();
@@ -42,7 +45,13 @@ public class GameController {
 	}
 
 	public Map<String, Object> whoseTurn(Map<String, Object> body) {
+		Map<String, Object> response = new HashMap<>();
 		String userId = body.get("userId").toString();
+		List<Player> players = PlayerController.getPlayersList();
+
+		response.put("status", HttpStatus.OK);
+		response.put("players", PlayerController.getPlayers());
+
 		return null;
 	}
 
@@ -60,5 +69,22 @@ public class GameController {
 
 	public static void shuffle() {
 		deck.shuffle();
+	}
+
+	public static void setCurrentPlayerTurn(int userId) {
+		currentPlayerTurn = userId;
+	}
+
+	public static int getCurrentPlayerTurn() {
+		return currentPlayerTurn;
+	}
+
+	public static boolean incrementBoard() {
+		if (++currentBoard > Values.RIVER) { return false; }
+		return true;
+	}
+
+	public static int getBoard() {
+		return currentBoard;
 	}
 }
