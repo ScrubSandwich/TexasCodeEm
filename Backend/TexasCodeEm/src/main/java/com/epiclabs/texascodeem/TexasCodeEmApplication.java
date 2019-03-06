@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.*;
+import sun.misc.Request;
 
 @RestController
 @SpringBootApplication
@@ -22,6 +23,13 @@ public class TexasCodeEmApplication {
 	@ResponseBody
 	public Map<String, Object> isReady() {
 		return gameController.isReady();
+	}
+
+	@CrossOrigin
+	@RequestMapping(value = "api/whoseTurn", method = RequestMethod.GET)
+	@ResponseBody
+	public Map(String, Object) whoseTurn() {
+		return gameController.whoseTurn();
 	}
 
 	@CrossOrigin
