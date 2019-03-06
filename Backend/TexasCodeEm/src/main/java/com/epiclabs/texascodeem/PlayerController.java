@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.epiclabs.texascodeem.api.Card;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -34,16 +36,28 @@ public class PlayerController {
         }
 
         response.put("players", playersObject);
-        response.put("status", HttpStatus.OK);
         return response;
 
     }
 
-    public static void addPlayer(Player p) {
-        players.add(p);
+    public static boolean addPlayer(Player p) {
+        return ( players.add(new Player(p.getName(), p.getId())) );
     }
 
     public static boolean removePlayer(Player p) {
         return (players.remove(p));
+    }
+
+    public static boolean addCards(int playerId, Card[] cards) {
+        for (int i = 0; i < players.size(); i++) {
+            Player player = players.get(i);
+
+            if (Integer.parseInt(player.getId()) == playerId) {
+                player.setCards(cards);
+                return true;
+            }
+        }
+
+        return false;
     }
 }
