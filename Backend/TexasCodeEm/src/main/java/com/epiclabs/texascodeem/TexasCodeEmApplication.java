@@ -21,8 +21,8 @@ public class TexasCodeEmApplication {
 	@CrossOrigin
 	@RequestMapping(value = "api/isReady", method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, Object> isReady() {
-		return gameController.isReady();
+	public Map<String, Object> isReady(@RequestBody Map<String, Object> body) {
+		return gameController.isReady(body);
 	}
 
 	@CrossOrigin
