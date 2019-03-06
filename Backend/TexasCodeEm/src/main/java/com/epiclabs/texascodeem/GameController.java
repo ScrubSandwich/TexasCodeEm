@@ -16,9 +16,12 @@ public class GameController {
 
 	public Map<String, Object> isReady(Map<String, Object> body) {
 		Map<String, Object> response = new HashMap<>();
-		boolean isReady = PlayerController.getPlayersList().size() >= Values.NUMBER_OF_PLAYERS;
+		List<Player> players = PlayerController.getPlayersList();
+		boolean isReady = players.size() >= Values.NUMBER_OF_PLAYERS;
 
 		if (isReady) {
+			setCurrentPlayerTurn(Integer.parseInt(players.get(0).getId()));
+
 			Map<String, Object> cardsMap = new HashMap<>();
 			Card[] cards = new Card[Values.NUMBER_OF_CARDS];
 			int userId = Integer.parseInt(body.get("userId").toString());
