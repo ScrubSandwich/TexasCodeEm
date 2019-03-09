@@ -42,6 +42,10 @@ public class GameController {
 
 			// Add the cards to the player object
 			PlayerController.addCards(userId, cards);
+
+			// Set the pot to collect the small and big blinds
+            setPot();
+            printGameInfo();
 		}
 
 		response.put("status", HttpStatus.OK);
@@ -72,7 +76,14 @@ public class GameController {
 			return response;
 		}
 
-		String action = body.get("action").toString();
+		String action;
+		try {
+            action = body.get("action").toString();
+        } catch (Exception ex){
+            response.put("status", HttpStatus.NO_CONTENT);
+            response.put("message", "You need to supply an action");
+            return response;
+        }
 
 		if (action.equals("check")) {
 		    // Do nothing
@@ -98,7 +109,8 @@ public class GameController {
 			return response;
 		}
 
-        boolean handOver = incrementPlayerTurn();
+        //boolean handOver = incrementPlayerTurn();
+        printGameInfo();
 
 		response.put("status", HttpStatus.OK);
 		return response;
@@ -129,7 +141,6 @@ public class GameController {
 		} else {
 			currentPlayerTurn = players.get(3).getIdInt();
 		}
-
 	}
 
 	// Returns true if the hand is over. False if hand is still going
@@ -181,15 +192,69 @@ public class GameController {
 		return currentPlayerTurn;
 	}
 
-	public static boolean incrementBoard() {
+	public static boolean incrementStreet() {
 		if (++currentBoard > Values.RIVER) {
 		    currentBoard = Values.PREFLOP;
 		    return false;
 		}
+
 		return true;
 	}
 
-	public static int getBoard() {
-		return currentBoard;
-	}
+	private static String getCurrentPlayersTurnName() {
+        List<Player> players = PlayerController.getPlayersList();
+        Player player;
+
+        for (int i = 0; i < players.size(); i++) {
+            player = players.get(i);
+            if (player.getIdInt() == currentPlayerTurn) { return player.getName(); }
+        }
+
+        return "No one's turn";
+    }
+
+    private static String getStreet() {
+	    switch (currentBoard) {
+            case Values.PREFLOP:
+	            return "Preflop";
+            case Values.FLOP:
+                return "Flop";
+            case Values.TURN:
+                return "Turn";
+            case Values.RIVER:
+                return "River";
+            default:
+                return "Hand Over";
+        }
+    }
+
+	private void printGameInfo() {
+        System.out.println("Current Player Turn: " + getCurrentPlayersTurnName());
+        System.out.println("Current Street: " + getStreet());
+        System.out.println("Current Bet: " + currentBet);
+        System.out.println("Current Pot: " + pot);
+    }
+
+    private void setPot() {
+        List<Player> players = PlayerController.getPlayersList();
+        Player player;
+        int numberOfPlayers = players.size();
+
+        if (numberOfPlayers == 2) {
+            players.get(0).decrementStack(Values.SB);
+            pot += Values.SB;
+
+            players.get(1).decrementStack(Values.BB);
+            pot += Values.BB;
+        }
+
+        if (numberOfPlayers > 2) {
+            players.get(1).decrementStack(Values.SB);
+            pot += Values.SB;
+
+            players.get(2).decrementStack(Values.BB);
+            pot += Values.BB;
+        }
+        currentBet = Values.BB;
+    }
 }
