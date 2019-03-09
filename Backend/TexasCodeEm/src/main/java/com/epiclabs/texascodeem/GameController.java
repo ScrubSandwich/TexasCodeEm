@@ -12,7 +12,7 @@ public class GameController {
 
 	private static Deck deck  = new Deck();
 	private static int currentPlayerTurn = -1;
-	private static int currentBoard = Values.PREFLOP;
+	private static int currentBoard = Values.HAND_OVER;
 	private static int closingAction = -1;
 	private static int currentBet = 0;
 	private static int pot = 0;
@@ -122,7 +122,7 @@ public class GameController {
 		String username = body.get("username").toString();
 		String id = Utility.makeID();
 		Player newPlayer = new Player(username, id);
-		newPlayer.setInHand(true);
+		if (currentBoard == Values.HAND_OVER) { newPlayer.setInHand(true); }
 		PlayerController.addPlayer(newPlayer);
 
 		response.put("status", HttpStatus.OK);

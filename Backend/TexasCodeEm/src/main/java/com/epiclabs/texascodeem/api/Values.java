@@ -6,6 +6,7 @@ public final class Values {
     public static final int DEFAULT_STACK_SIZE = 5000;
     public static final int ID_LENGTH = 10;
 
+    public static final int HAND_OVER = -1;
     public static final int PREFLOP = 0;
     public static final int FLOP = 1;
     public static final int TURN = 2;
