@@ -109,7 +109,7 @@ public class GameController {
 			return response;
 		}
 
-        //boolean handOver = incrementPlayerTurn();
+        boolean handOver = incrementPlayerTurn();
         printGameInfo();
 
 		response.put("status", HttpStatus.OK);
@@ -121,7 +121,9 @@ public class GameController {
 
 		String username = body.get("username").toString();
 		String id = Utility.makeID();
-		PlayerController.addPlayer(new Player(username, id));
+		Player newPlayer = new Player(username, id);
+		newPlayer.setInHand(true);
+		PlayerController.addPlayer(newPlayer);
 
 		response.put("status", HttpStatus.OK);
 		response.put("userID", id);
@@ -237,7 +239,6 @@ public class GameController {
 
     private void setPot() {
         List<Player> players = PlayerController.getPlayersList();
-        Player player;
         int numberOfPlayers = players.size();
 
         if (numberOfPlayers == 2) {
