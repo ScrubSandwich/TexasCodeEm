@@ -7,14 +7,13 @@ import com.epiclabs.texascodeem.api.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import javax.rmi.CORBA.Util;
-
 @Service
 public class GameController {
 
 	private static Deck deck  = new Deck();
 	private static int currentPlayerTurn = -1;
 	private static int currentBoard = Values.HAND_OVER;
+	private static Card[] boardCards = new Card[Values.NUMBER_OF_BOARD_CARDS];
 	private static int closingAction = -1;
 	private static int currentBet = 0;
 	private static int pot = 0;
@@ -82,6 +81,7 @@ public class GameController {
 	public Map<String, Object> acceptTurn(Map<String, Object> body) throws Exception {
 		Map<String, Object> response = new HashMap<>();
 		int userId = Integer.parseInt(body.get("userId").toString());
+		boolean roundComplete = false;
 
 		if (userId != currentPlayerTurn) {
 			response.put("status", HttpStatus.METHOD_NOT_ALLOWED);
@@ -100,11 +100,17 @@ public class GameController {
 
 		if (action.equals("check")) {
 
-		    if (userId != closingAction) {
-                response.put("message", "You cannot check if you are not the one who bet");
-                response.put("status", HttpStatus.BAD_REQUEST);
+		    if (closingAction == userId) {
+		        roundComplete = true;
+            } else {
+                if (currentBet > 0) {
+                    response.put("message", "You cannot check if you are not the one who bet");
+                    response.put("status", HttpStatus.BAD_REQUEST);
+                }
             }
 
+            System.out.println(PlayerController.getName(userId) + " has checked ");
+            System.out.println("========================");
 		} else if (action.equals("bet")) {
             if (currentBet > 0) {
                 response.put("message", "You cannot bet with a current bet out. You can raise, however");
@@ -116,6 +122,9 @@ public class GameController {
             closingAction = userId;
             pot += amount;
             PlayerController.setMoneyInPot(userId, amount);
+
+            System.out.println(PlayerController.getName(userId) + " has bet " + amount);
+            System.out.println("========================");
         } else if (action.equals("call")) {
 
 			int remainingStack = PlayerController.subtractStack(userId, currentBet);
@@ -125,7 +134,12 @@ public class GameController {
 				pot += (currentBet + remainingStack);
 			} else {
 				pot += currentBet - PlayerController.getMoneyInPot(userId);
+				PlayerController.setMoneyInPot(userId, currentBet);
 			}
+
+            if (closingAction == userId) {
+                roundComplete = true;
+            }
 
             System.out.println(PlayerController.getName(userId) + " has called " + currentBet);
             System.out.println("========================");
@@ -137,18 +151,34 @@ public class GameController {
 			currentBet = raiseToTotal;
 			closingAction = userId;
 
+            System.out.println(PlayerController.getName(userId) + " has raised to " + raiseToTotal);
+            System.out.println("========================");
+
 		} else if (action.equals("fold")) {
 			PlayerController.setInHand(userId, false);
+			if (closingAction == userId) {
+			    roundComplete = true;
+            }
+
+            System.out.println(PlayerController.getName(userId) + " has folded");
+            System.out.println("========================");
 		} else {
 			response.put("status", HttpStatus.NOT_ACCEPTABLE);
 			response.put("message", "Expected action to equal bet, call, raise, check or fold");
 			return response;
 		}
 
-        boolean handOver = incrementPlayerTurn();
+		if (!roundComplete) {
+            boolean handOver = incrementPlayerTurn();
+        } else {
+            currentBet = 0;
+            incrementStreet();
+            boolean handOver = incrementPlayerTurn();
+        }
         printGameInfo();
 
 		response.put("status", HttpStatus.OK);
+        response.put("street", getStreet());
 		return response;
 	}
 
@@ -237,8 +267,30 @@ public class GameController {
 		    return false;
 		}
 
+		dealBoard(currentBoard);
+
 		return true;
 	}
+
+	private static void dealBoard(int board) {
+	    if (board == Values.FLOP) {
+	        Card c = deck.deal();
+            System.out.println(c.toString());
+            boardCards[0] = c;
+            c = deck.deal();
+            System.out.println(c.toString());
+            boardCards[1] = c;
+            c = deck.deal();
+            System.out.println(c.toString());
+            boardCards[2] = c;
+        } else if (board == Values.TURN) {
+            boardCards[3] = deck.deal();
+        } else if (board == Values.RIVER) {
+            boardCards[4] = deck.deal();
+        } else {
+            // Do nothing
+        }
+    }
 
 	private static String getCurrentPlayersTurnName() {
         List<Player> players = PlayerController.getPlayersList();
@@ -287,6 +339,15 @@ public class GameController {
         System.out.println("Current Bet: " + currentBet);
         System.out.println("Current Pot: " + pot);
         System.out.println("Players is hand: " + getPlayersInHand());
+
+        if (currentBoard > 0) {
+            System.out.print("Cards: ");
+            System.out.print(boardCards[0] + " ");
+            System.out.print(boardCards[1] + " ");
+            System.out.print(boardCards[2] + " ");
+            System.out.print(boardCards[3] + " ");
+            System.out.println(boardCards[4]);
+        }
         System.out.println("========================");
     }
 
