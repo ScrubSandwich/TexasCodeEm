@@ -242,18 +242,26 @@ public class GameController {
         int numberOfPlayers = players.size();
 
         if (numberOfPlayers == 2) {
-            players.get(0).decrementStack(Values.SB);
+            Player p1 = players.get(0);
+            p1.decrementStack(Values.SB);
+            p1.setMoneyInPot(Values.SB);
             pot += Values.SB;
 
-            players.get(1).decrementStack(Values.BB);
+            Player p2 = players.get(1);
+            p2.decrementStack(Values.BB);
+            p2.setMoneyInPot(Values.BB);
             pot += Values.BB;
         }
 
         if (numberOfPlayers > 2) {
-            players.get(1).decrementStack(Values.SB);
+            Player p1 = players.get(1);
+            p1.decrementStack(Values.SB);
+            p1.setMoneyInPot(Values.SB);
             pot += Values.SB;
 
-            players.get(2).decrementStack(Values.BB);
+            Player p2 = players.get(2);
+            p2.decrementStack(Values.BB);
+            p2.setMoneyInPot(Values.BB);
             pot += Values.BB;
         }
         currentBet = Values.BB;
