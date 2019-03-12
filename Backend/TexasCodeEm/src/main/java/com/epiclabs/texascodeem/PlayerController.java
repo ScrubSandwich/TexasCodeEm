@@ -31,6 +31,8 @@ public class PlayerController {
             playersMap.put("name", player.getName());
             playersMap.put("id", player.getId());
             playersMap.put("stackSize", player.getStackSize());
+            playersMap.put("inHand", player.inHand());
+            playersMap.put("moneyInPot", player.getMoneyInPot());
 
             boolean turn = Integer.parseInt(player.getId()) == GameController.getCurrentPlayerTurn();
             playersMap.put("turn", turn);
@@ -64,7 +66,7 @@ public class PlayerController {
     }
 
     // Returns remaining stack sizee; Negative if more than what is left is subtracted
-    public static int subtractStack(int userId, int amount) throws Exception {
+    public static int subtractStack(int userId, int amount) throws Exception    {
         for (int i = 0; i < players.size(); i++) {
             Player player = players.get(i);
 
@@ -82,7 +84,7 @@ public class PlayerController {
             Player player = players.get(i);
 
             if (player.getIdInt() == userId) {
-                player.setInHand(false);
+                player.setInHand(inHand);
                 return;
             }
         }
@@ -97,5 +99,36 @@ public class PlayerController {
         }
 
         return false;
+    }
+
+    public static void setMoneyInPot(int id, int amount) {
+        for (int i = 0; i < players.size(); i++) {
+            Player player = players.get(i);
+            if (player.getIdInt() == id) {
+                player.setMoneyInPot(amount);
+            }
+        }
+    }
+
+    public static int getMoneyInPot(int id) {
+        for (int i = 0; i < players.size(); i++) {
+            Player player = players.get(i);
+            if (player.getIdInt() == id) {
+                return player.getMoneyInPot();
+            }
+        }
+
+        return 0;
+    }
+
+    public static String getName(int id) {
+        for (int i = 0; i < players.size(); i++) {
+            Player player = players.get(i);
+            if (player.getIdInt() == id) {
+                return player.getName();
+            }
+        }
+
+        return "User Id not found";
     }
 }

@@ -25,10 +25,12 @@ public class GameController {
 		boolean isReady = players.size() >= Values.NUMBER_OF_PLAYERS;
 
 		if (isReady) {
-		    if (isValueUserId(userId)) {
+		    currentBoard = Values.PREFLOP;
+		    if (isValidUserId(userId)) {
 		        if (!PlayerController.hasCards(userId)) {
                     setCurrentPlayerTurn();
                     dealCardsToPlayerAndUpdateResponse(response, userId);
+                    PlayerController.setInHand(userId, true);
                     setPot();
                     printGameInfo();
                 } else {
@@ -64,7 +66,6 @@ public class GameController {
         response.put("cards", cardsMap);
     }
 
-
 	public Map<String, Object> whoseTurn(Map<String, Object> body) {
 		Map<String, Object> response = new HashMap<>();
 		String userId = body.get("userId").toString();
@@ -76,7 +77,7 @@ public class GameController {
 		return response;
 	}
 
-	public Map<String, Object> acceptTurn(Map<String, Object> body) {
+	public Map<String, Object> acceptTurn(Map<String, Object> body) throws Exception {
 		Map<String, Object> response = new HashMap<>();
 		int userId = Integer.parseInt(body.get("userId").toString());
 
@@ -96,26 +97,49 @@ public class GameController {
         }
 
 		if (action.equals("check")) {
-		    // Do nothing
-		} else if (action.equals("call")) {
+
+		    if (userId != closingAction) {
+                response.put("message", "You cannot check if you are not the one who bet");
+                response.put("status", HttpStatus.BAD_REQUEST);
+            }
+
+		} else if (action.equals("bet")) {
+            if (currentBet > 0) {
+                response.put("message", "You cannot bet with a current bet out. You can raise, however");
+                response.put("status", HttpStatus.BAD_REQUEST);
+            }
+
+            int amount = Integer.parseInt(body.get("amount").toString());
+            currentBet = amount;
+            closingAction = userId;
+            pot += amount;
+            PlayerController.setMoneyInPot(userId, amount);
+        } else if (action.equals("call")) {
+
 			int remainingStack = PlayerController.subtractStack(userId, currentBet);
 
 			// This will add only what the player had left to the pot
 			if (remainingStack < 0) {
 				pot += (currentBet + remainingStack);
 			} else {
-				pot += currentBet;
+				pot += currentBet - PlayerController.getMoneyInPot(userId);
 			}
+
+            System.out.println(PlayerController.getName(userId) + " has called " + currentBet);
+            System.out.println("========================");
+
 		} else if (action.equals("raise")) {
+
 			int raiseToTotal = Integer.parseInt(body.get("raiseSize").toString());
 			pot += currentBet + raiseToTotal;
 			currentBet = raiseToTotal;
 			closingAction = userId;
+
 		} else if (action.equals("fold")) {
 			PlayerController.setInHand(userId, false);
 		} else {
 			response.put("status", HttpStatus.NOT_ACCEPTABLE);
-			response.put("message", "Expected action to equal call, raise, check or fold");
+			response.put("message", "Expected action to equal bet, call, raise, check or fold");
 			return response;
 		}
 
@@ -179,16 +203,17 @@ public class GameController {
 				} else {
                     // Loop through to make sure the next player is in the hand
                     for (int j = i + 1; true; j++) {
-                        if (j == players.size() - 1) {
-                            j = 0;
-                        }
-
                         Player nextPlayer = players.get(j);
 
                         if (nextPlayer.inHand()) {
                             currentPlayerTurn = nextPlayer.getIdInt();
                             return false;
                         }
+
+                        if (j == players.size() - 1) {
+                            j = 0;
+                        }
+
                     }
 				}
                 // If here is reached, then the hand is over
@@ -206,7 +231,7 @@ public class GameController {
 
 	public static boolean incrementStreet() {
 		if (++currentBoard > Values.RIVER) {
-		    currentBoard = Values.PREFLOP;
+		    currentBoard = Values.HAND_OVER;
 		    return false;
 		}
 
@@ -240,11 +265,27 @@ public class GameController {
         }
     }
 
+    private static String getPlayersInHand() {
+        List<Player> players = PlayerController.getPlayersList();
+        String response = "";
+
+        for (int i = 0; i < players.size(); i++) {
+            if (!players.get(i).inHand()) { continue; }
+
+            response += players.get(i).getName();
+            if (i != players.size() - 1) { response += ", "; }
+        }
+
+        return response;
+    }
+
 	private void printGameInfo() {
         System.out.println("Current Player Turn: " + getCurrentPlayersTurnName());
         System.out.println("Current Street: " + getStreet());
         System.out.println("Current Bet: " + currentBet);
         System.out.println("Current Pot: " + pot);
+        System.out.println("Players is hand: " + getPlayersInHand());
+        System.out.println("========================");
     }
 
     private void setPot() {
@@ -253,31 +294,48 @@ public class GameController {
 
         if (numberOfPlayers == 2) {
             Player p1 = players.get(0);
-            p1.decrementStack(Values.SB);
-            p1.setMoneyInPot(Values.SB);
-            pot += Values.SB;
-
             Player p2 = players.get(1);
-            p2.decrementStack(Values.BB);
-            p2.setMoneyInPot(Values.BB);
-            pot += Values.BB;
+
+            // Make sure the player has not already put the SB in
+            if (p1.getMoneyInPot() != Values.SB) {
+                p1.decrementStack(Values.SB);
+                p1.setMoneyInPot(Values.SB);
+                pot += Values.SB;
+            }
+
+            // Make sure the player has not already put the BB in
+            if (p2.getMoneyInPot() != Values.BB) {
+                p2.decrementStack(Values.BB);
+                p2.setMoneyInPot(Values.BB);
+                pot += Values.BB;
+                closingAction = p2.getIdInt();
+            }
         }
 
         if (numberOfPlayers > 2) {
             Player p1 = players.get(1);
-            p1.decrementStack(Values.SB);
-            p1.setMoneyInPot(Values.SB);
-            pot += Values.SB;
-
             Player p2 = players.get(2);
-            p2.decrementStack(Values.BB);
-            p2.setMoneyInPot(Values.BB);
-            pot += Values.BB;
+
+            // Make sure the player has not already put the SB in
+            if (p1.getMoneyInPot() != Values.SB) {
+                p1.decrementStack(Values.SB);
+                p1.setMoneyInPot(Values.SB);
+                pot += Values.SB;
+            }
+
+            // Make sure the player has not already put the BB in
+            if (p2.getMoneyInPot() != Values.BB) {
+                p2.decrementStack(Values.BB);
+                p2.setMoneyInPot(Values.BB);
+                pot += Values.BB;
+                closingAction = p2.getIdInt();
+            }
         }
+
         currentBet = Values.BB;
     }
 
-    private boolean isValueUserId(int id) {
+    private boolean isValidUserId(int id) {
         List<Player> players = PlayerController.getPlayersList();
 
         for (int i = 0; i < players.size(); i++) {

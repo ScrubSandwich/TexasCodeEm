@@ -34,7 +34,7 @@ public class TexasCodeEmApplication {
 	@CrossOrigin
 	@RequestMapping(value = "api/acceptTurn", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> acceptTurn(@RequestBody Map<String, Object> body) {
+	public Map<String, Object> acceptTurn(@RequestBody Map<String, Object> body) throws Exception {
 		return gameController.acceptTurn(body);
 	}
 
