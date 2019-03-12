@@ -21,18 +21,12 @@ public class GameController {
 		Map<String, Object> response = new HashMap<>();
 
 		List<Player> players = PlayerController.getPlayersList();
+        int userId = Integer.parseInt(body.get("userId").toString());
 		boolean isReady = players.size() >= Values.NUMBER_OF_PLAYERS;
 
 		if (isReady) {
 			setCurrentPlayerTurn();
-
-			Map<String, Object> cardsMap;
-			int userId = Integer.parseInt(body.get("userId").toString());
-
-			cardsMap = dealCardsToPlayerAndGetMap(userId);
-            response.put("cards", cardsMap);
-
-			// Set the pot to collect the small and big blinds
+			dealCardsToPlayerAndUpdateResponse(response, userId);
             setPot();
             printGameInfo();
 		}
@@ -44,7 +38,7 @@ public class GameController {
 		return (response);
 	}
 
-	private Map<String, Object> dealCardsToPlayerAndGetMap(int id) {
+	private void dealCardsToPlayerAndUpdateResponse(Map<String, Object> response, int id) {
         Map<String, Object> cardsMap = new HashMap<>();
         Card[] cards = new Card[Values.NUMBER_OF_CARDS];
 
@@ -58,11 +52,10 @@ public class GameController {
             cardsMap.put("card" + i, cards[i].toString());
         }
 
-        // Add the cards to the player object
         PlayerController.addCards(id, cards);
-
-        return cardsMap;
+        response.put("cards", cardsMap);
     }
+
 
 	public Map<String, Object> whoseTurn(Map<String, Object> body) {
 		Map<String, Object> response = new HashMap<>();
