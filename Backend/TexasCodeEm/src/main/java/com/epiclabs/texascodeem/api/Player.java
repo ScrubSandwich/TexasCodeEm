@@ -8,11 +8,15 @@ public class Player {
     private boolean inHand;
     private Card[] cards;
 
+    // The amount the player has put into the pot in each street
+    private int moneyInPot;
+
     public Player(String name, String id) {
         this.name = name;
         this.id = id;
         this.stackSize = Values.DEFAULT_STACK_SIZE;
         this.cards = new Card[Values.NUMBER_OF_CARDS];
+        this.moneyInPot = 0;
     }
 
     public String getName() {
@@ -66,5 +70,13 @@ public class Player {
 
     public boolean inHand() {
         return inHand;
+    }
+
+    public int getMoneyInPot() {
+        return moneyInPot;
+    }
+
+    public void setMoneyInPot(int moneyInPot) {
+        this.moneyInPot = moneyInPot;
     }
 }
