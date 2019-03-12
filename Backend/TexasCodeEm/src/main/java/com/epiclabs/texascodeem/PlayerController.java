@@ -5,9 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.epiclabs.texascodeem.Exception.InvalidUserIdException;
 import com.epiclabs.texascodeem.api.Card;
-import com.epiclabs.texascodeem.api.Values;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.epiclabs.texascodeem.api.Player;
@@ -65,7 +64,7 @@ public class PlayerController {
     }
 
     // Returns remaining stack sizee; Negative if more than what is left is subtracted
-    public static int subtractStack(int userId, int amount) {
+    public static int subtractStack(int userId, int amount) throws Exception {
         for (int i = 0; i < players.size(); i++) {
             Player player = players.get(i);
 
@@ -75,7 +74,7 @@ public class PlayerController {
             }
         }
 
-        return Integer.MIN_VALUE;
+        throw new InvalidUserIdException("Invalid user Id");
     }
 
     public static void setInHand(int userId, boolean inHand) {
