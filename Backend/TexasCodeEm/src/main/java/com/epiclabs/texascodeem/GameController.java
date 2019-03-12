@@ -7,6 +7,8 @@ import com.epiclabs.texascodeem.api.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import javax.rmi.CORBA.Util;
+
 @Service
 public class GameController {
 
@@ -26,7 +28,7 @@ public class GameController {
 
 		if (isReady) {
 		    currentBoard = Values.PREFLOP;
-		    if (isValidUserId(userId)) {
+		    if (Utility.isValidUserId(userId)) {
 		        if (!PlayerController.hasCards(userId)) {
                     setCurrentPlayerTurn();
                     dealCardsToPlayerAndUpdateResponse(response, userId);
@@ -333,15 +335,5 @@ public class GameController {
         }
 
         currentBet = Values.BB;
-    }
-
-    private boolean isValidUserId(int id) {
-        List<Player> players = PlayerController.getPlayersList();
-
-        for (int i = 0; i < players.size(); i++) {
-            if (players.get(i).getIdInt() == id) { return true; }
-        }
-
-        return false;
     }
 }
