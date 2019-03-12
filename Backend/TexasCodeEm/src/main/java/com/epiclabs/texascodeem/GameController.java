@@ -26,22 +26,11 @@ public class GameController {
 		if (isReady) {
 			setCurrentPlayerTurn();
 
-			Map<String, Object> cardsMap = new HashMap<>();
-			Card[] cards = new Card[Values.NUMBER_OF_CARDS];
+			Map<String, Object> cardsMap;
 			int userId = Integer.parseInt(body.get("userId").toString());
 
-			for (int i = 0; i < Values.NUMBER_OF_CARDS; i++) {
-				cards[i] = deck.deal();
-			}
-
-			// Add the player's cards into the response
-			for (int i = 0; i < Values.NUMBER_OF_CARDS; i++) {
-				cardsMap.put("card" + i, cards[i].toString());
-			}
-			response.put("cards", cardsMap);
-
-			// Add the cards to the player object
-			PlayerController.addCards(userId, cards);
+			cardsMap = dealCardsToPlayerAndGetMap(userId);
+            response.put("cards", cardsMap);
 
 			// Set the pot to collect the small and big blinds
             setPot();
@@ -54,6 +43,26 @@ public class GameController {
 
 		return (response);
 	}
+
+	private Map<String, Object> dealCardsToPlayerAndGetMap(int id) {
+        Map<String, Object> cardsMap = new HashMap<>();
+        Card[] cards = new Card[Values.NUMBER_OF_CARDS];
+
+        // Deal out the cards for this player
+        for (int i = 0; i < Values.NUMBER_OF_CARDS; i++) {
+            cards[i] = deck.deal();
+        }
+
+        // Add the player's cards into the response
+        for (int i = 0; i < Values.NUMBER_OF_CARDS; i++) {
+            cardsMap.put("card" + i, cards[i].toString());
+        }
+
+        // Add the cards to the player object
+        PlayerController.addCards(id, cards);
+
+        return cardsMap;
+    }
 
 	public Map<String, Object> whoseTurn(Map<String, Object> body) {
 		Map<String, Object> response = new HashMap<>();
