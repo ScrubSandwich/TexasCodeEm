@@ -25,10 +25,18 @@ public class GameController {
 		boolean isReady = players.size() >= Values.NUMBER_OF_PLAYERS;
 
 		if (isReady) {
-			setCurrentPlayerTurn();
-			dealCardsToPlayerAndUpdateResponse(response, userId);
-            setPot();
-            printGameInfo();
+		    if (isValueUserId(userId)) {
+		        if (!PlayerController.hasCards(userId)) {
+                    setCurrentPlayerTurn();
+                    dealCardsToPlayerAndUpdateResponse(response, userId);
+                    setPot();
+                    printGameInfo();
+                } else {
+                    response.put("message", "User already has cards");
+                }
+            } else {
+                response.put("message", "Invalid user ID");
+            }
 		}
 
 		response.put("status", HttpStatus.OK);

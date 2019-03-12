@@ -6,6 +6,7 @@ public class Player {
     private final String id;
     private int stackSize;
     private boolean inHand;
+    private boolean hasCards;
     private Card[] cards;
 
     // The amount the player has put into the pot in each street
@@ -15,7 +16,8 @@ public class Player {
         this.name = name;
         this.id = id;
         this.stackSize = Values.DEFAULT_STACK_SIZE;
-        this.cards = new Card[Values.NUMBER_OF_CARDS];
+        this.cards = null;
+        this.hasCards = false;
         this.moneyInPot = 0;
     }
 
@@ -35,6 +37,9 @@ public class Player {
         if (Values.NUMBER_OF_CARDS != cards.length) {
             return false;
         }
+
+        this.cards = new Card[Values.NUMBER_OF_CARDS];
+        this.hasCards = true;
 
         for (int i = 0; i < Values.NUMBER_OF_CARDS; i++) {
             Card card = cards[i];
@@ -78,5 +83,9 @@ public class Player {
 
     public void setMoneyInPot(int moneyInPot) {
         this.moneyInPot = moneyInPot;
+    }
+
+    public boolean hasCards() {
+        return hasCards;
     }
 }

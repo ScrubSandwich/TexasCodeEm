@@ -88,4 +88,15 @@ public class PlayerController {
             }
         }
     }
+
+    public static boolean hasCards(int id) {
+        for (int i = 0; i < players.size(); i++) {
+            Player player = players.get(i);
+            if (player.getIdInt() == id) {
+                if (player.hasCards()) { return true; }
+            }
+        }
+
+        return false;
+    }
 }
