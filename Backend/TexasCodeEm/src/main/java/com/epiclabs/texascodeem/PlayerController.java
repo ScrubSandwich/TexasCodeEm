@@ -66,13 +66,13 @@ public class PlayerController {
     }
 
     // Returns remaining stack sizee; Negative if more than what is left is subtracted
-    public static int subtractStack(int userId, int amount) throws Exception    {
+    public static int subtractStack(int userId, int amount) throws Exception {
         for (int i = 0; i < players.size(); i++) {
             Player player = players.get(i);
 
             if (player.getIdInt() == userId) {
-                int stack = player.getStackSize();
-                return stack - amount;
+                player.decrementStack(amount);
+                return player.getStackSize();
             }
         }
 

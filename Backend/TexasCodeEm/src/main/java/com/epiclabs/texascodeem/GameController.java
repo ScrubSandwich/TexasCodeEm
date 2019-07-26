@@ -122,12 +122,13 @@ public class GameController {
             closingAction = userId;
             pot += amount;
             PlayerController.setMoneyInPot(userId, amount);
+            PlayerController.subtractStack(userId, amount);
 
             System.out.println(PlayerController.getName(userId) + " has bet " + amount);
             System.out.println("========================");
         } else if (action.equals("call")) {
 
-			int remainingStack = PlayerController.subtractStack(userId, currentBet);
+			int remainingStack = PlayerController.subtractStack(userId, currentBet - PlayerController.getMoneyInPot(userId));
 
 			// This will add only what the player had left to the pot
 			if (remainingStack < 0) {
@@ -146,8 +147,8 @@ public class GameController {
 
 		} else if (action.equals("raise")) {
 
-			int raiseToTotal = Integer.parseInt(body.get("raiseSize").toString());
-			pot += currentBet + raiseToTotal;
+			int raiseToTotal = Integer.parseInt(body.get("amount").toString());
+			pot += currentBet + raiseToTotal - PlayerController.getMoneyInPot(userId);
 			currentBet = raiseToTotal;
 			closingAction = userId;
 
@@ -168,12 +169,16 @@ public class GameController {
 			return response;
 		}
 
-		if (!roundComplete) {
-            boolean handOver = incrementPlayerTurn();
-        } else {
+        System.out.println("Player turn before incremenitng: " + currentPlayerTurn);
+        boolean handOver = incrementPlayerTurn();
+        System.out.println("Player turn after incrementingg: " + currentPlayerTurn);
+        System.out.println("Closing action: " + closingAction);
+
+//		if (currentPlayerTurn == closingAction) { roundComplete = true; }
+
+        if (roundComplete) {
             currentBet = 0;
             incrementStreet();
-            boolean handOver = incrementPlayerTurn();
         }
         printGameInfo();
 
@@ -268,21 +273,30 @@ public class GameController {
 		}
 
 		dealBoard(currentBoard);
+		resetPlayerTurn();
 
 		return true;
 	}
 
+	private static void resetPlayerTurn() {
+        List<Player> players = PlayerController.getPlayersList();
+        Player p;
+
+        for (int i = 1; i < players.size(); i++) {
+            p = players.get(i);
+
+            if (p.inHand()) {
+                currentPlayerTurn = p.getIdInt();
+                return;
+            }
+        }
+    }
+
 	private static void dealBoard(int board) {
 	    if (board == Values.FLOP) {
-	        Card c = deck.deal();
-            System.out.println(c.toString());
-            boardCards[0] = c;
-            c = deck.deal();
-            System.out.println(c.toString());
-            boardCards[1] = c;
-            c = deck.deal();
-            System.out.println(c.toString());
-            boardCards[2] = c;
+            boardCards[0] = deck.deal();
+            boardCards[1] = deck.deal();
+            boardCards[2] = deck.deal();
         } else if (board == Values.TURN) {
             boardCards[3] = deck.deal();
         } else if (board == Values.RIVER) {
