@@ -4,7 +4,7 @@ public final class Values {
     public static final int NUMBER_OF_CARDS = 2;
     public static final int NUMBER_OF_PLAYERS = 2;
     public static final int DEFAULT_STACK_SIZE = 5000;
-    public static final int ID_LENGTH = 10;
+    public static final int ID_LENGTH = 4;
 
     public static final int PREFLOP = 0;
     public static final int FLOP = 1;
