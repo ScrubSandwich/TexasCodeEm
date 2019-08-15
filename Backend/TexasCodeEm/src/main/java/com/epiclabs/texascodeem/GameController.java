@@ -161,9 +161,9 @@ public class GameController {
 				} else {
                     // Loop through to make sure the next player is in the hand
                     for (int j = i + 1; true; j++) {
-//                        if (j == players.size() - 1) {
-//                            j = 0;
-//                        }
+                        if (j == players.size()) {
+                            return false;
+                        }
 
                         Player nextPlayer = players.get(j);
 

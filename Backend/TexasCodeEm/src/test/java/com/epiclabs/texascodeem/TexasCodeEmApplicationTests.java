@@ -51,6 +51,7 @@ public class TexasCodeEmApplicationTests {
 	public void incrementTurnTwoPlayers() {
 		Map<String, Object> body1 = new HashMap<>();
 		Map<String, Object> body2 = new HashMap<>();
+
 		body1.put("username", "player1");
 		body2.put("username", "player2");
 
@@ -62,6 +63,7 @@ public class TexasCodeEmApplicationTests {
 
 		Map<String, Object> bodyForReady1 = new HashMap<>();
 		Map<String, Object> bodyForReady2 = new HashMap<>();
+
 		bodyForReady1.put("userId", player1Id);
 		bodyForReady2.put("userId", player2Id);
 
@@ -78,6 +80,48 @@ public class TexasCodeEmApplicationTests {
 
 		GameController.incrementPlayerTurn();
 		assertEquals(Integer.parseInt(player2Id), gameController.getCurrentPlayerTurn());
+	}
+
+	@Test
+	public void incremenetTurnThreePlayers() {
+		Map<String, Object> body1 = new HashMap<>();
+		Map<String, Object> body2 = new HashMap<>();
+		Map<String, Object> body3 = new HashMap<>();
+
+		body1.put("username", "player1");
+		body2.put("username", "player2");
+		body3.put("username", "player3");
+
+		Map<String, Object> response1 = application.generateUserID(body1);
+		Map<String, Object> response2 = application.generateUserID(body2);
+		Map<String, Object> response3 = application.generateUserID(body3);
+
+		String player1Id = (String) response1.get("userID");
+		String player2Id = (String) response2.get("userID");
+		String player3Id = (String) response3.get("userID");
+
+		Map<String, Object> bodyForReady1 = new HashMap<>();
+		Map<String, Object> bodyForReady2 = new HashMap<>();
+		Map<String, Object> bodyForReady3 = new HashMap<>();
+
+		bodyForReady1.put("userId", player1Id);
+		bodyForReady2.put("userId", player2Id);
+		bodyForReady3.put("userId", player3Id);
+
+		gameController.isReady(bodyForReady1);
+		gameController.isReady(bodyForReady2);
+		gameController.isReady(bodyForReady3);
+
+		assertEquals(Integer.parseInt(player1Id), gameController.getCurrentPlayerTurn());
+
+		GameController.incrementPlayerTurn();
+		assertEquals(Integer.parseInt(player2Id), gameController.getCurrentPlayerTurn());
+
+		GameController.incrementPlayerTurn();
+		assertEquals(Integer.parseInt(player3Id), gameController.getCurrentPlayerTurn());
+
+		GameController.incrementPlayerTurn();
+		assertEquals(Integer.parseInt(player1Id), gameController.getCurrentPlayerTurn());
 	}
 
 }
