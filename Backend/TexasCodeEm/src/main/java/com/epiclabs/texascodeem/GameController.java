@@ -20,8 +20,7 @@ public class GameController {
 	public Map<String, Object> isReady(Map<String, Object> body) {
 		Map<String, Object> response = new HashMap<>();
 
-		List<Player> players = PlayerController.getPlayersList();
-		boolean isReady = players.size() >= Values.NUMBER_OF_PLAYERS;
+		boolean isReady = isReady();
 
 		if (isReady) {
 			setCurrentPlayerTurn();
@@ -42,6 +41,7 @@ public class GameController {
 
 			// Add the cards to the player object
 			PlayerController.addCards(userId, cards);
+			PlayerController.setInHand(userId, true);
 		}
 
 		response.put("status", HttpStatus.OK);
@@ -49,6 +49,11 @@ public class GameController {
 		response.put("players", PlayerController.getPlayers());
 
 		return (response);
+	}
+
+	public boolean isReady() {
+		List<Player> players = PlayerController.getPlayersList();
+		return players.size() >= Values.NUMBER_OF_PLAYERS;
 	}
 
 	public Map<String, Object> whoseTurn(Map<String, Object> body) {
@@ -156,9 +161,9 @@ public class GameController {
 				} else {
                     // Loop through to make sure the next player is in the hand
                     for (int j = i + 1; true; j++) {
-                        if (j == players.size() - 1) {
-                            j = 0;
-                        }
+//                        if (j == players.size() - 1) {
+//                            j = 0;
+//                        }
 
                         Player nextPlayer = players.get(j);
 

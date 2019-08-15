@@ -18,6 +18,13 @@ public class TexasCodeEmApplication {
 	private PlayerController playerController;
 
 	@CrossOrigin
+	@RequestMapping(value = "/api/generateUserId", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> generateUserID(@RequestBody Map<String, Object> body) {
+		return gameController.generateUserID(body);
+	}
+
+	@CrossOrigin
 	@RequestMapping(value = "api/isReady", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> isReady(@RequestBody Map<String, Object> body) {
@@ -36,13 +43,6 @@ public class TexasCodeEmApplication {
 	@ResponseBody
 	public Map<String, Object> acceptTurn(@RequestBody Map<String, Object> body) {
 		return gameController.acceptTurn(body);
-	}
-
-	@CrossOrigin
-	@RequestMapping(value = "/api/generateUserId", method = RequestMethod.POST)
-	@ResponseBody
-	public Map<String, Object> generateUserID(@RequestBody Map<String, Object> body) {
-		return gameController.generateUserID(body);
 	}
 
 	@CrossOrigin

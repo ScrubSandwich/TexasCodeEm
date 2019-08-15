@@ -32,6 +32,7 @@ public class PlayerController {
             playersMap.put("name", player.getName());
             playersMap.put("id", player.getId());
             playersMap.put("stackSize", player.getStackSize());
+            playersMap.put("inHand", player.inHand());
 
             boolean turn = Integer.parseInt(player.getId()) == GameController.getCurrentPlayerTurn();
             playersMap.put("turn", turn);
@@ -83,7 +84,7 @@ public class PlayerController {
             Player player = players.get(i);
 
             if (player.getIdInt() == userId) {
-                player.setInHand(false);
+                player.setInHand(inHand);
                 return;
             }
         }
