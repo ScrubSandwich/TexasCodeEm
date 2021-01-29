@@ -1,17 +1,27 @@
 package com.epiclabs.texascodeem.api;
 
+import com.epiclabs.texascodeem.GameController;
+
 public class Player {
 
     private final String name;
     private final String id;
     private int stackSize;
+    private int position;
+    private int seatNumber;
     private boolean inHand;
     private Card[] cards;
 
     public Player(String name, String id) {
+        this(name, id, -1);
+    }
+
+    public Player(String name, String id, int desiredSeatNumber) {
         this.name = name;
         this.id = id;
         this.stackSize = Values.DEFAULT_STACK_SIZE;
+        this.position = -1;
+        this.seatNumber = GameController.getSeatOfNewPlayer(desiredSeatNumber);
         this.cards = new Card[Values.NUMBER_OF_CARDS];
     }
 
@@ -66,5 +76,37 @@ public class Player {
 
     public boolean inHand() {
         return inHand;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public int incrementPosition() {
+        if (++position >= 9) {
+            position = 0;
+        }
+
+        return position;
+    }
+
+    public int getSeatNumber() {
+        return seatNumber;
+    }
+
+    public void setSeatNumber(int seatNumber) {
+        this.seatNumber = seatNumber;
+    }
+
+    public int incrementSeatNumber() {
+        if (++seatNumber >= Values.NUMBER_OF_SEATS) {
+            seatNumber = 0;
+        }
+
+        return seatNumber;
     }
 }

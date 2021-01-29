@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class Utility {
 	
-	public static String makeID() {
+	public static String createID() {
 		Random rand = new Random();
 		String ID = "";
 

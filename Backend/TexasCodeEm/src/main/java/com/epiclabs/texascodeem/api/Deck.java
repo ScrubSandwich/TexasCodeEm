@@ -7,7 +7,9 @@ public class Deck {
     private final int DECK_SIZE = 52;
     private int currentCard;
 
-    public Deck(){
+    private static Deck instance;
+
+    private Deck() {
         deck = new Card[52];
         cardsUsed = 0;
         currentCard = 0;
@@ -21,6 +23,15 @@ public class Deck {
         }
         currentCard = 0;
     }
+
+    public static Deck getInstance() {
+        if (instance == null) {
+            instance = new Deck();
+        }
+
+        return instance;
+    }
+
 
     public void shuffle(){
         for (int i = 0; i < DECK_SIZE; i++) {

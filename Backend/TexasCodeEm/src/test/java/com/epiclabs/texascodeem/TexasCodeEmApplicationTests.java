@@ -124,4 +124,34 @@ public class TexasCodeEmApplicationTests {
 		assertEquals(Integer.parseInt(player1Id), gameController.getCurrentPlayerTurn());
 	}
 
+	@Test
+	public void flopAfterSmallBlindLimpAndBigBlindCheckTwoPlayers() {
+		Map<String, Object> body1 = new HashMap<>();
+		Map<String, Object> body2 = new HashMap<>();
+
+		body1.put("username", "player1");
+		body2.put("username", "player2");
+
+		Map<String, Object> response1 = application.generateUserID(body1);
+		Map<String, Object> response2 = application.generateUserID(body2);
+
+		String player1Id = (String) response1.get("userID");
+		String player2Id = (String) response2.get("userID");
+
+		Map<String, Object> bodyForReady1 = new HashMap<>();
+		Map<String, Object> bodyForReady2 = new HashMap<>();
+
+		bodyForReady1.put("userId", player1Id);
+		bodyForReady2.put("userId", player2Id);
+
+		gameController.isReady(bodyForReady1);
+		gameController.isReady(bodyForReady2);
+
+		Map<String, Object> bodyForCall = new HashMap<>();
+		bodyForCall.put("userId", player1Id);
+		bodyForCall.put("action", "call");
+
+		gameController.acceptTurn(bodyForCall);
+	}
+
 }

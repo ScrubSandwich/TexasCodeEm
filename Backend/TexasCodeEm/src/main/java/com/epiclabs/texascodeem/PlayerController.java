@@ -6,53 +6,42 @@ import java.util.List;
 import java.util.Map;
 
 import com.epiclabs.texascodeem.api.Card;
-import com.epiclabs.texascodeem.api.Values;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-
 import com.epiclabs.texascodeem.api.Player;
+
+import org.springframework.stereotype.Service;
 
 @Service
 public class PlayerController {
 
-    private static List<Player> players = new ArrayList<>();
+    private static PlayerController instance;
 
-    public static List<Player> getPlayersList() {
+    private List<Player> players = new ArrayList<>();
+
+    private PlayerController() {
+
+    }
+
+    public static PlayerController getInstance() {
+        if (instance == null) {
+            instance = new PlayerController();
+        }
+
+        return instance;
+    }
+
+    public List<Player> getPlayers() {
         return players;
     }
 
-    public static Map<String, Object> getPlayers() {
-        Map<String, Object> response = new HashMap<>();
-        List< Map<String, Object> > playersObject = new ArrayList<>();
-
-        for (int i = 0; i < players.size(); i++) {
-            Player player = players.get(i);
-            Map<String, Object> playersMap = new HashMap<>();
-
-            playersMap.put("name", player.getName());
-            playersMap.put("id", player.getId());
-            playersMap.put("stackSize", player.getStackSize());
-            playersMap.put("inHand", player.inHand());
-
-            boolean turn = Integer.parseInt(player.getId()) == GameController.getCurrentPlayerTurn();
-            playersMap.put("turn", turn);
-
-            playersObject.add(playersMap);
-        }
-
-        response.put("players", playersObject);
-        return response;
+    public boolean addPlayer(Player p) {
+        return players.add(new Player(p.getName(), p.getId()));
     }
 
-    public static boolean addPlayer(Player p) {
-        return ( players.add(new Player(p.getName(), p.getId())) );
+    public boolean removePlayer(Player p) {
+        return players.remove(p);
     }
 
-    public static boolean removePlayer(Player p) {
-        return (players.remove(p));
-    }
-
-    public static boolean addCards(int playerId, Card[] cards) {
+    public boolean addCards(int playerId, Card[] cards) {
         for (int i = 0; i < players.size(); i++) {
             Player player = players.get(i);
 
@@ -65,8 +54,8 @@ public class PlayerController {
         return false;
     }
 
-    // Returns remaining stack sizee; Negative if more than what is left is subtracted
-    public static int subtractStack(int userId, int amount) {
+    // Returns remaining stack size; Negative if more than what is left is subtracted
+    public int subtractStack(int userId, int amount) {
         for (int i = 0; i < players.size(); i++) {
             Player player = players.get(i);
 
@@ -79,7 +68,7 @@ public class PlayerController {
         return Integer.MIN_VALUE;
     }
 
-    public static void setInHand(int userId, boolean inHand) {
+    public void setInHand(int userId, boolean inHand) {
         for (int i = 0; i < players.size(); i++) {
             Player player = players.get(i);
 
@@ -88,5 +77,13 @@ public class PlayerController {
                 return;
             }
         }
+    }
+
+    public void setPosition(int userId) throws Exception {
+        PositionController.getInstance().findPosition(userId);
+    }
+
+    public int getNumberOfPlayers() {
+        return this.players.size();
     }
 }
